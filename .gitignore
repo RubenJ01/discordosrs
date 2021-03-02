@@ -1,2 +1,3 @@
 conn.py
-__pychache__/
+bottoken.py
+*.pyc

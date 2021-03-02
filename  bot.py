@@ -1,13 +1,15 @@
 import discord
 from discord.ext import commands
 from discord.ext.commands import command
+from bottoken import token, prefix
+
 
 startup_extensions = [
     "cogs.wintertodt",
     "cogs.character_creation",
 ]
 
-bot = commands.Bot(command_prefix=";", help_command=None)
+bot = commands.Bot(command_prefix=prefix, help_command=None)
 bot.remove_command("help")
 
 
@@ -18,4 +20,4 @@ for extension in startup_extensions:
         exc = f"{type(e).__name__}: {e}"
         print(f"Failed to load extension {extension}\n{exc}")
 
-bot.run("NTcyMzY1NzQ5NzgwMzQ4OTI4.XMbPJA.WYSE4C8wZjMnMc_kA__A0d6WG2M")
+bot.run(token)

@@ -35,7 +35,8 @@ class WinterTodt(Cog, name="Wintertodt"):
     async def event(self, ctx):
         danger = random.randint(1, 101)
         if danger <= 10:
-            embed = discord.Embed(description="Snow falls upon you interrupting any ongoing activity.")
+            embed = discord.Embed(
+                description="Snow falls upon you interrupting any ongoing activity.")
             await self.activity_embed.edit(embed=embed)
         elif self.chopping_bruma_roots:
             xp_earned = int((self.woodcutting_level * 0.3) * 2)
@@ -99,7 +100,8 @@ class WinterTodt(Cog, name="Wintertodt"):
 
     async def game_pause(self, ctx):
         self.wait_time = 60
-        embed = discord.Embed(description=f"The next wintertodt game is about to start in {self.wait_time} seconds.")
+        embed = discord.Embed(
+            description=f"The next wintertodt game is about to start in {self.wait_time} seconds.")
         await ctx.send(embed=embed)
         await asyncio.sleep(self.wait_time)
 
