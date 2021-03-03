@@ -6,5 +6,4 @@ cur.execute(
 )
 cur.execute(
     """DROP TABLE IF EXISTS Characters"""
-
 )
