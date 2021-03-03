@@ -1,5 +1,0 @@
-Discord Runescape
-
-Setup a pipenv.
-Setup a basic bot.
-Link a database to the bot.
