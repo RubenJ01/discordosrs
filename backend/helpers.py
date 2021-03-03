@@ -4,13 +4,14 @@ from backend.conn import cur, conn, db
 async def sql_query(sql_code, values=()):
     """A function used to make database queries."""
     try:
-        await cur.execute(sql_code, values)
+        cur.execute(sql_code, values)
     except Exception as e:
         print(f"sql_query error: {e}")
         results = []
         return results
     else:
-        results = await cur.fetchall()
+        print("sql_query")
+        results = cur.fetchall()
         return results
 
 
