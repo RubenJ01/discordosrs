@@ -1,6 +1,5 @@
-from conn import conn
+from conn import cur
 
-cur = conn.cursor()
 
 # Create Characters Table
 cur.execute(
@@ -8,12 +7,12 @@ cur.execute(
     CREATE TABLE IF NOT EXISTS Characters (
     `id` int auto_increment primary key,
     `name` varchar(20),
-    `discord_id` bigint,
+    `discord_id` bigint UNIQUE,
     `date_created` datetime DEFAULT CURRENT_TIMESTAMP,
     `last_update` datetime DEFAULT CURRENT_TIMESTAMP,
-    `combat_lvl` int DEFAULT 3
-    `attack_lvl` int default 1,
-    ´attack_exp´ int default 0,
+    `combat_lvl` int DEFAULT 3,
+    `attack_lvl` int DEFAULT 1,
+    `attack_exp` int default 0,
     `strength_lvl` int default 1,
     ´strength_exp´ int default 0,
     `defence_lvl` int default 1,
@@ -57,7 +56,7 @@ cur.execute(
     `construction_lvl` int default 1,
     ´construction_exp´ int default 0,
     `hunter_lvl` int default 1,
-    ´hunter_exp´ int default 0,
+    ´hunter_exp´ int default 0
     );
     """
 )
