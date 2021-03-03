@@ -1,5 +1,6 @@
 import random
 import asyncio
+import time
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
 import discord
@@ -20,6 +21,8 @@ class WinterTodt(Cog, name="Wintertodt"):
         self.firemaking_xp_earned = None
         self.woodcutting_xp_earned = None
         self.activity_embed = None
+        self.time_started = None
+        self.time_end = None
 
     async def initialize_game(self):
         self.wintertodt_game_time = random.choice([300, 310, 320])
@@ -106,10 +109,25 @@ class WinterTodt(Cog, name="Wintertodt"):
         await asyncio.sleep(self.wait_time)
 
     @command(name="wintertodt")
-    async def wintertodt_game_loop(self, ctx):
-        while True:
+    async def wintertodt_game_loop(self, ctx, requested_time: int):
+        if requested_time > 8:
+            embed = discord.Embed(description="The maximum time is 8 hours.")
+            return await ctx.send(embed=embed)
+        elif requested_time < 1:
+            embed = discord.Embed(description="The minimum time is 1 hour.")
+            return await ctx.send(embed=embed)
+        embed = discord.Embed(description=f"... begins subdueing the Wintertodt for {requested_time} hour(s).")
+        self.time_started = time.time()
+        self.time_end = time.time() + (requested_time * 3600)
+        await ctx.send(embed=embed)
+        while self.time_started < self.time_end:
             await self.start_game(ctx)
-            await self.game_pause(ctx)
+            if time.time() < self.time_end:
+                await self.game_pause(ctx)
+            else:
+                break
+        embed = discord.Embed(description=f"... finished doing the Wintertodt for {requested_time} hour(s).")
+        return await ctx.send(embed=embed)
 
 
 def setup(bot):
