@@ -17,7 +17,6 @@ class CharacterHandling(Cog, name="Character Handling"):
 
     def __init__(self, bot):
         self.bot = bot
-    # create a group for character commands
 
     @has_character()
     @commands.group(name="character", invoke_without_command=True)
@@ -28,7 +27,6 @@ class CharacterHandling(Cog, name="Character Handling"):
         # send back some information on the character TODO: figure out what information we need to send to the user.
         print(character)
 
-    # command for creating a character
     @has_no_character()
     @character.command(name="create")
     async def create_character(self, ctx, character_name):
@@ -43,7 +41,6 @@ class CharacterHandling(Cog, name="Character Handling"):
                 "You have created a character called " + character_name)
         )
         return await ctx.send(embed=message)
-    # command for deleting a character
 
     @has_character()
     @character.command(name="delete")
@@ -52,18 +49,20 @@ class CharacterHandling(Cog, name="Character Handling"):
         # ask to confirm that the auther wants to delete the character
         await ctx.send("Are you sure you want to delete your character? Y/N")
 
-        # check that the message is from the same author and in the same channel as the command was called.
         try:
             def check(message):
+                """check that the message is from the same author and in the same channel as the command was called."""
                 return message.channel == ctx.channel and message.author == ctx.author
 
             msg = await self.bot.wait_for('message', timeout=15.0, check=check)
             if msg.content in 'Yy':
-
                 # if the message from the author contains y or Y, delete the character bound to that discord_id
-
                 await sql_edit("DELETE FROM Characters WHERE discord_id = ?", (discord_id,))
                 await ctx.send('Character deleted')
+
+            elif msg.content in 'Nn':
+                await ctx.send('Character deletion stopped.')
+
         except asyncio.TimeoutError:
             return await ctx.send('No response. Character reset stopped.')
 
