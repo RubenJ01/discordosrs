@@ -4,14 +4,11 @@ from discord.ext.commands import command
 from bottoken import token, prefix
 from backend.conn import cur
 
-# DB testing
-
-cur.execute("SELECT id, name, discord_id FROM characters")
-
 
 startup_extensions = [
     "cogs.wintertodt",
     "cogs.character_creation",
+    "cogs.error_handler"
 ]
 
 bot = commands.Bot(command_prefix=prefix, help_command=None)
@@ -27,8 +24,6 @@ async def on_ready():
     print(len([s for s in bot.guilds]))
     print("Number of players currently connected to Bot:")
     print(sum(guild.member_count for guild in bot.guilds))
-    for (id, name, discord_id) in cur:
-        print(id, name, discord_id)
 
 for extension in startup_extensions:
     try:
