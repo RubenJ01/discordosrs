@@ -1,5 +1,5 @@
 import math
-from backend.checks import NoCharacter
+from backend.checks import NoCharacter, HasCharacter
 
 import discord
 from discord.ext import commands
@@ -28,6 +28,9 @@ class CommandErrorHandler(commands.Cog, name='ErrorHandler'):
             return await ctx.send(embed=embed)
         elif isinstance(error, NoCharacter):
             embed = discord.Embed(description="To use this command you need to make a character first.")
+            return await ctx.send(embed=embed)
+        elif isinstance(error, HasCharacter):
+            embed = discord.Embed(description="You already have a character.")
             return await ctx.send(embed=embed)
         else:
             raise error

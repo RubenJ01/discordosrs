@@ -4,6 +4,7 @@ import time
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
 from backend.helpers import gained_exp
+from backend.checks import has_character
 
 import discord
 from discord.ext.commands import Cog, command
@@ -110,6 +111,7 @@ class WinterTodt(Cog, name="Wintertodt"):
         await ctx.send(embed=embed)
         await asyncio.sleep(self.wait_time)
 
+    @has_character()
     @command(name="wintertodt")
     async def wintertodt_game_loop(self, ctx, requested_time: int):
         if requested_time > 8:
