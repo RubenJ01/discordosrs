@@ -26,6 +26,12 @@ class CharacterHandling(Cog, name="Character Handling"):
         character = await sql_query("SELECT id, name, discord_id FROM characters WHERE discord_id = ?", (discord_id,))
         # send back some information on the character TODO: figure out what information we need to send to the user.
         print(character)
+        message = discord.Embed(
+            title=character[0][1],  # Character name
+            description=str(
+                f"You have created a character called")
+        )
+        return await ctx.send(embed=message)
 
     @has_no_character()
     @character.command(name="create")
