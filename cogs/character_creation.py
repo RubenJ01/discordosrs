@@ -30,7 +30,10 @@ class CharacterCreation(Cog, name="Character Creation"):
                 "You have created a character called " + character_name)
         )
 
-        # get discord_id
+    @character.command(name="delete")
+    async def delete_character(self, ctx):
+        discord_id = ctx.author.id
+        await ctx.send("Are you sure you want to delete your character?")
 
         return await ctx.send(embed=message)
 
