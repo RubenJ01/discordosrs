@@ -8,7 +8,12 @@ from backend.helpers import sql_query, sql_edit
 from backend.checks import has_character, has_no_character
 
 
-class CharacterCreation(Cog, name="Character Creation"):
+class CharacterHandling(Cog, name="Character Handling"):
+    """A class containing the various commands using in handling characters.
+    - character: Display important information about the users character
+    - character create name: create a character using the users discord_id and the name provided
+    - character delete: prompts the user to make sure they want to delete their character, times out after 15 seconds of not recieving a y/Y
+    """
 
     def __init__(self, bot):
         self.bot = bot
@@ -28,8 +33,7 @@ class CharacterCreation(Cog, name="Character Creation"):
     @character.command(name="create")
     async def create_character(self, ctx, character_name):
         discord_id = ctx.author.id
-        # check if the user already has a character
-        print(has_character)
+
         # create character with the name from the command and the discord id of the author
         await sql_edit("INSERT INTO characters (name, discord_id) VALUES(?, ?)", (character_name, discord_id,))
 
@@ -55,12 +59,14 @@ class CharacterCreation(Cog, name="Character Creation"):
 
             msg = await self.bot.wait_for('message', timeout=15.0, check=check)
             if msg.content in 'Yy':
+
                 # if the message from the author contains y or Y, delete the character bound to that discord_id
 
                 await sql_edit("DELETE FROM Characters WHERE discord_id = ?", (discord_id,))
+                await ctx.send('Character deleted')
         except asyncio.TimeoutError:
             return await ctx.send('No response. Character reset stopped.')
 
 
 def setup(bot):
-    bot.add_cog(CharacterCreation(bot))
+    bot.add_cog(CharacterHandling(bot))

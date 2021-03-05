@@ -7,7 +7,7 @@ from backend.conn import cur
 
 startup_extensions = [
     "cogs.wintertodt",
-    "cogs.character_creation",
+    "cogs.character_handling",
     "cogs.error_handler"
 ]
 

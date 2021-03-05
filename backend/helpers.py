@@ -59,5 +59,3 @@ async def gained_exp(ctx, skill, amount, discord_id):
             else:
                 await ctx.send("you do not level up")
                 return await ctx.send(f"you level up to level: {data['levels'][count - 1]['level']}")
-
-
