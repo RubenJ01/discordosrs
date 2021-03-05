@@ -3,6 +3,8 @@ import asyncio
 import time
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
+from backend.helpers import gained_exp
+
 import discord
 from discord.ext.commands import Cog, command
 
@@ -128,6 +130,11 @@ class WinterTodt(Cog, name="Wintertodt"):
                 break
         embed = discord.Embed(description=f"... finished doing the Wintertodt for {requested_time} hour(s).")
         return await ctx.send(embed=embed)
+
+    @command(name="test")
+    async def test(self, ctx, skill, amount: int):
+        await gained_exp(ctx, skill, amount, ctx.author.id)
+
 
 
 def setup(bot):
