@@ -60,47 +60,28 @@ cur.execute(
     """
 )
 
-""" Table for NPC's """
+""" BANK TABLE """
 cur.execute(
     """
-    CREATE TABLE IF NOT EXISTS enemies (
+    CREATE TABLE IF NOT EXISTS bank (
     id int auto_increment primary key,
-    type enum ('monster', 'boss'),
-    name varchar(40),
-    combat_lvl int
-    );
-    """
-)
+    user_id int,
+    item_type enum ('ressource', 'equipable'),
+    item_id int,
+    amount int,
 
-"""Table for tracking boss kills
-    boss_id will reference the ID of the NPC in the NPC table.
-    To track the amount of times a character has killed the boss, we pull out count where uid and boss_id
+    FOREIGN KEY (user_id) REFERENCES characters(id)
+    )
 
-    DEPENDENCIES: characters, non_playable_characters
 """
-cur.execute(
-    """
-    CREATE TABLE IF NOT EXISTS enemy_kills (
-    id int auto_increment primary key,
-    character_id int NOT NULL,
-    boss_id int,
-    boss_name varchar(40),
-    time_of_first_kill datetime DEFAULT CURRENT_TIMESTAMP,
-    kill_count bigint,
-
-    FOREIGN KEY (character_id) REFERENCES characters(id),
-    FOREIGN KEY (boss_id) REFERENCES enemies(id)
-    );
-    """
 )
 
-""" Table for items and properties """
 cur.execute(
     """
-    CREATE TABLE IF NOT EXISTS items (
-        id int auto_increment primary key,
-        item_name varchar(40) NOT NULL,
-
+    CREATE TABLE IF NOT EXISTS ressource_items (
+    id int auto_increment primary key,
+    item_name varchar(40) NOT NULL,
+    emoji_id int
     )
     """
 )
