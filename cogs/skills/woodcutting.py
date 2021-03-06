@@ -66,6 +66,8 @@ class WoodcuttingTraining(Cog, name="Woodcutting Training"):
                     # TODO: Make sure to change this to 3600 so it's in hours :P
                     self.time_end = time.time() + (requested_time * 60)
                     logs_cut = 0
+                    # TODO: calculate amount of exp earned
+                    # TODO: Send the data to the database every hour
                     while self.time_started < self.time_end:
                         effeciency_coefficient = randint(5, 10)/10
                         xp_per_log = data["trees"][index]["xp_per_log"]
@@ -73,6 +75,7 @@ class WoodcuttingTraining(Cog, name="Woodcutting Training"):
                         logs_per_minute = round((
                             xp_per_hour_at_99 / 60 / xp_per_log) * effeciency_coefficient)
                         if logs_cut + logs_per_minute >= 28:
+                            # TODO: Put logs in the bank, and send logs_cut and exp earning to the database
                             print("gonna bank")
                             logs_cut = 0
                         logs_cut = logs_cut + logs_per_minute
