@@ -1,4 +1,5 @@
 import math
+
 from backend.checks import NoCharacter, HasCharacter
 
 import discord
