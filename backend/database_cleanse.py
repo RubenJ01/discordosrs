@@ -6,3 +6,13 @@ cur.execute(
 cur.execute(
     """DROP TABLE IF EXISTS Characters"""
 )
+cur.execute(
+    """DROP TABLE IF EXISTS enemies"""
+)
+
+cur.execute(
+    """DROP TABLE IF EXISTS ressource_items"""
+)
+cur.execute(
+    """DROP TABLE IF EXISTS equipable_items"""
+)

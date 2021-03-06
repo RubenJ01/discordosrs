@@ -1,0 +1,19 @@
+{
+ "man": [
+  {
+   "table_name": "weapons_and_armour",
+   "roll_weight": 100,
+   "contents": [
+    {
+     "item_name": "bronze_med_helm",
+     "item_id": 1,
+     "roll_weight": 0.015625
+    },
+    {
+     "item": "iron_dagger",
+     "roll_weight": 0.0078125
+    }
+   ]
+  }
+ ]
+}
