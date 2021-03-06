@@ -3,7 +3,7 @@ from conn import cur
 """Table for Characters with all information regarding skills as well"""
 cur.execute(
     """
-    CREATE TABLE IF NOT EXISTS Characters (
+    CREATE TABLE IF NOT EXISTS characters (
     `id` int auto_increment primary key,
     `name` varchar(20),
     `discord_id` bigint,
@@ -60,37 +60,39 @@ cur.execute(
     """
 )
 
-"""Table for tracking boss kills
-
-    boss_id will reference the ID of the NPC in the NPC table.
-    To track the amount of times a character has killed the boss, we pull out count where uid and boss_id
-
-"""
-cur.execute(
-    """
-    CREATE TABLE IF NOT EXISTS boss_kills (
-    `id` int auto_increment primary key,
-    'character_id' int NOT NULL,
-    'boss_id' int,
-    'boss_name' varchar(40),
-    'time_of_kill' datetime DEFAULT CURRENT_TIMESTAMP,
-
-    FOREIGN KEY (character_id) REFERENCES Characers(id)
-    FOREIGN KEY (boss_id) REFERENCES non_playable_characters(id)
-    """
-)
-
 """
 Table for NPC's
 """
 cur.execute(
     """
     CREATE TABLE IF NOT EXISTS non_playable_characters (
-    'id' int auto_increment primary key,
-    'type' enum ('boss', 'merchant', 'trainer', 'villager'),
-    'name' varchar(40),
-    'combat_lvl' int,
-    TODO: HP ? Some combat stats?
-    )
+    id int auto_increment primary key,
+    type enum ('boss', 'merchant', 'trainer', 'villager'),
+    name varchar(40),
+    combat_lvl int
+    );
+    """
+)
+
+
+"""Table for tracking boss kills
+
+    boss_id will reference the ID of the NPC in the NPC table.
+    To track the amount of times a character has killed the boss, we pull out count where uid and boss_id
+
+    DEPENDENCIES: characters, non_playable_characters
+"""
+cur.execute(
+    """
+    CREATE TABLE IF NOT EXISTS boss_kills (
+    id int auto_increment primary key,
+    character_id int NOT NULL,
+    boss_id int,
+    boss_name varchar(40),
+    time_of_kill datetime DEFAULT CURRENT_TIMESTAMP,
+
+    FOREIGN KEY (character_id) REFERENCES characters(id),
+    FOREIGN KEY (boss_id) REFERENCES non_playable_characters(id)
+    );
     """
 )

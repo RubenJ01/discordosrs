@@ -31,6 +31,7 @@ async def sql_edit(sql_code, values=()):
 
 
 async def gained_exp(ctx, skill, amount, discord_id):
+    # TODO: If we get the ctx, do we need the discord_id? Can't we just get the discord_id from the ctx.author.id?
     """
     Triggered when a user earns experience.
     - Calculates if a new level or multiple levels are gained.
@@ -39,6 +40,7 @@ async def gained_exp(ctx, skill, amount, discord_id):
     """
     skill_exp_request = f"{skill}_exp"
     skill_lvl_request = f"{skill}_lvl"
+    amount = int(amount)
     # a list of all the skills a user can gain exp for
     valid_skills = {"firemaking_exp", "woodcutting_exp"}
     if skill_exp_request not in valid_skills:
@@ -48,8 +50,8 @@ async def gained_exp(ctx, skill, amount, discord_id):
     # grabbing the current level and exp amount from the user
     query = f"SELECT {skill_exp_request}, {skill_lvl_request} FROM characters WHERE discord_id = ?"
     data = await sql_query(query, (discord_id,))
-    current_skill_xp = data[0][0]
-    current_skill_lvl = data[0][1]
+    current_skill_xp = int(data[0][0])
+    current_skill_lvl = int(data[0][1])
     # opening the xp_by_level.json
     path_ = Path(os.getcwd(), "resources", "xp_by_level.json")
     with open(path_, "r") as f:
@@ -90,6 +92,3 @@ async def gained_exp(ctx, skill, amount, discord_id):
                 query = f"UPDATE characters SET {skill_exp_request} = ?, {skill_lvl_request} = ? WHERE discord_id = ?"
                 values = (new_skill_xp, new_level, discord_id,)
                 return await sql_edit(query, values)
-
-
-

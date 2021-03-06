@@ -8,7 +8,8 @@ from backend.conn import cur
 startup_extensions = [
     "cogs.wintertodt",
     "cogs.character_handling",
-    "cogs.error_handler"
+    "cogs.error_handler",
+    "cogs.skill_training",
 ]
 
 bot = commands.Bot(command_prefix=prefix, help_command=None)
