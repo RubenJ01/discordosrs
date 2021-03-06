@@ -2,54 +2,63 @@
   "trees" : [
     {
       "name" : "regular_tree",
+      "log_name" : "normal_log",
       "xp_per_log" : 25,
       "xp_per_hour_at_99" : 15000,
       "level_requirement" : 1
     },
     {
       "name" : "oak_tree",
+      "log_name" : "oak",
       "xp_per_log" : 37.5,
       "xp_per_hour_at_99" : 40000,
       "level_requirement" : 15
     },
     {
       "name" : "willow_tree",
+      "log_name" : "willow",
       "xp_per_log" : 67.5,
       "xp_per_hour_at_99" : 40000,
       "level_requirement" : 30
     },
     {
       "name" : "teak_tree",
+      "log_name" : "teak",
       "xp_per_log" : 85,
       "xp_per_hour_at_99" : 90000,
       "level_requirement" : 35
     },
     {
       "name" : "maple_tree",
+      "log_name" : "maple",
       "xp_per_log" : 100,
       "xp_per_hour_at_99" : 60000,
       "level_requirement" : 45
     },
     {
       "name" : "mahogany_tree",
+      "log_name" : "mahogany",
       "xp_per_log" : 125,
       "xp_per_hour_at_99" : 48000,
       "level_requirement" : 50
     },
     {
       "name" : "yew_tree",
+      "log_name" : "yew",
       "xp_per_log" : 175,
       "xp_per_hour_at_99" : 38000,
       "level_requirement" : 60
     },
     {
       "name" : "magic_tree",
+      "log_name" : "magic",
       "xp_per_log" : 250,
       "xp_per_hour_at_99" : 30000,
       "level_requirement" : 75
     },
     {
       "name" : "redwood_tree",
+      "log_name" : "redwood",
       "xp_per_log" : 380,
       "xp_per_hour_at_99" : 70000,
       "level_requirement" : 90

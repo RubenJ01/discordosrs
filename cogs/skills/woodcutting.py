@@ -1,4 +1,8 @@
 import time
+import os
+import json
+from pathlib import Path
+from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
 import discord
 from discord import message
@@ -13,6 +17,14 @@ from backend.checks import has_character
 class WoodcuttingTraining(Cog, name="Woodcutting Training"):
     def __init__(self, bot):
         self.bot = bot
+        self.time_started = None
+        self.time_end = None
+        self.amount_cut = None
+
+
+    async def event(self):
+        pass
+
 
     @has_character()
     @commands.group(name="woodcutting", invoke_without_command=True)
@@ -27,25 +39,44 @@ class WoodcuttingTraining(Cog, name="Woodcutting Training"):
     @has_character()
     @woodcutting.command(name="cut")
     async def cut(self, ctx, log: str, requested_time: int):
-        time_check = check_time(requested_time, 1, 8)
-        # TODO: Maybe in the timecheck we also make the time function? like so can just do the function for as long time as the function tells us, or is that not possible?
-        # the function would then take "time" and return true until the time runs out
-        if time_check[0] is True:
-            embed = discord.Embed(
-                description=f"... begins cutting wood for {requested_time} hour(s)")
-
-            self.time_started = time.time()
-            # TODO: Make sure to change this to 3600 so it's in hours :P
-            self.time_end = time.time() + (requested_time * 60)
-            await ctx.send(embed=embed)
-            self.amount_cut = 0
-
-            while self.time_started < self.time_end:
-                # cut some fucking wood bruh
-                if time.time() >= self.time_end:
-                    break
+        path_ = Path(os.getcwd(), "resources", "trees.json")
+        with open(path_, "r") as f:
+            data = json.load(f)
+        exists = False
+        index = 0
+        for count, tree in enumerate(data["trees"]):
+            if log in tree["log_name"]:
+                index = count
+                exists = True
+        if exists:
+            query = "SELECT woodcutting_lvl FROM characters WHERE discord_id = ?"
+            values = (ctx.author.id,)
+            woodcutting_lvl = await sql_query(query, values)
+            woodcutting_lvl = woodcutting_lvl[0][0]
+            required_woodcutting_lvl = data["trees"][index]["level_requirement"]
+            if required_woodcutting_lvl <= woodcutting_lvl:
+                time_check = check_time(requested_time, 1, 8)
+                # the function would then take "time" and return true until the time runs out
+                if time_check[0] is True:
+                    display_log = "normal" if log == "log" else log
+                    embed = discord.Embed(
+                        description=f"... begins cutting {display_log} logs for {requested_time} hour(s)")
+                    await ctx.send(embed=embed)
+                    self.time_started = time.time()
+                    # TODO: Make sure to change this to 3600 so it's in hours :P
+                    self.time_end = time.time() + (requested_time * 60)
+                    while self.time_started < self.time_end:
+                        # cut some fucking wood bruh
+                        if time.time() >= self.time_end:
+                            break
+                else:
+                    return await ctx.send(embed=time_check[1])
+            else:
+                embed = discord.Embed(description=f"You need {required_woodcutting_lvl} woodcutting to cut {log} logs.")
+                return await ctx.send(embed=embed)
         else:
-            return await ctx.send(embed=time_check[1])
+            embed = discord.Embed(description=f"{log} does not exist.")
+            return await ctx.send(embed=embed)
 
 
 def setup(bot):
