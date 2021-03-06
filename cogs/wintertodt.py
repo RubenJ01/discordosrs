@@ -93,8 +93,8 @@ class WinterTodt(Cog, name="Wintertodt"):
         xp_earned = 100 * self.firemaking_level
         self.firemaking_xp_earned += xp_earned
         discord_id = ctx.author.id
-        await gained_exp(ctx, "firemaking", self.firemaking_xp_earned, discord_id)
-        await gained_exp(ctx, "woodcutting", self.woodcutting_xp_earned, discord_id)
+        await gained_exp(ctx, "firemaking", self.firemaking_xp_earned)
+        await gained_exp(ctx, "woodcutting", self.woodcutting_xp_earned)
         desc = ""
         if self.points_earned > 500:
             desc += f"You have reached at least 500 points earning you an additional " \

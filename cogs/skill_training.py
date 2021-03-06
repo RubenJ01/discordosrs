@@ -12,9 +12,9 @@ class SkillTraining(Cog, name="Skill Training"):
     """A class for containing commands regarding the training of ones skills."""
 
     @command(name="train")
-    async def train_skill(selv, ctx, skillname, exp):
+    async def train_skill(self, ctx, skillname, exp):
         print(skillname, exp)
-        await gained_exp(ctx, skillname, exp, ctx.author.id)
+        await gained_exp(ctx, skillname, exp)
 
         return await ctx.send('Calculating exp gaing')
 
