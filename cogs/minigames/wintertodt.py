@@ -3,7 +3,7 @@ import asyncio
 import time
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
-from backend.helpers import gained_exp
+from backend.helpers import gained_exp, check_time
 from backend.checks import has_character
 
 import discord
@@ -117,24 +117,22 @@ class WinterTodt(Cog, name="Wintertodt"):
     @has_character()
     @command(name="wintertodt")
     async def wintertodt_game_loop(self, ctx, requested_time: int):
-        if requested_time > 8:
-            embed = discord.Embed(description="The maximum time is 8 hours.")
+        values = check_time(requested_time, 1, 8)
+        if values[0] is True:
+            embed = discord.Embed(description=f"... begins subdueing the Wintertodt for {requested_time} hour(s).")
+            self.time_started = time.time()
+            self.time_end = time.time() + (requested_time * 3600)
+            await ctx.send(embed=embed)
+            while self.time_started < self.time_end:
+                await self.start_game(ctx)
+                if time.time() < self.time_end:
+                    await self.game_pause(ctx)
+                else:
+                    break
+            embed = discord.Embed(description=f"... finished doing the Wintertodt for {requested_time} hour(s).")
             return await ctx.send(embed=embed)
-        elif requested_time < 1:
-            embed = discord.Embed(description="The minimum time is 1 hour.")
-            return await ctx.send(embed=embed)
-        embed = discord.Embed(description=f"... begins subdueing the Wintertodt for {requested_time} hour(s).")
-        self.time_started = time.time()
-        self.time_end = time.time() + (requested_time * 3600)
-        await ctx.send(embed=embed)
-        while self.time_started < self.time_end:
-            await self.start_game(ctx)
-            if time.time() < self.time_end:
-                await self.game_pause(ctx)
-            else:
-                break
-        embed = discord.Embed(description=f"... finished doing the Wintertodt for {requested_time} hour(s).")
-        return await ctx.send(embed=embed)
+        else:
+            return await ctx.send(embed=values[1])
 
 
 

@@ -28,7 +28,6 @@ class CharacterHandling(Cog, name="Character Handling"):
         # get the character matching the discord ID
         character = await sql_query("SELECT id, name, discord_id FROM characters WHERE discord_id = ?", (discord_id,))
         # send back some information on the character TODO: figure out what information we need to send to the user.
-        print(character)
         message = discord.Embed(
             title=character[0][1],  # Character name
             description=str(

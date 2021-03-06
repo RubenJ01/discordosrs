@@ -6,7 +6,7 @@ from backend.conn import cur
 
 
 startup_extensions = [
-    "cogs.wintertodt",
+    "cogs.minigames.wintertodt",
     "cogs.character_handling",
     "cogs.error_handler",
     "cogs.skill_training",

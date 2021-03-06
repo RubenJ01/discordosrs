@@ -1,5 +1,6 @@
 import json
 import os
+import discord
 from pathlib import Path
 
 from backend.conn import cur, conn, db
@@ -92,3 +93,13 @@ async def gained_exp(ctx, skill, amount):
                 query = f"UPDATE characters SET {skill_exp_request} = ?, {skill_lvl_request} = ? WHERE discord_id = ?"
                 values = (new_skill_xp, new_level, discord_id,)
                 return await sql_edit(query, values)
+
+
+def check_time(requested_time, minimum_time, maximum_time):
+    if requested_time > maximum_time:
+        embed = discord.Embed(description=f"The maximum time is {maximum_time} hours.")
+        return [False, embed]
+    elif requested_time < minimum_time:
+        embed = discord.Embed(description=f"The minimum time is {minimum_time} hour.")
+        return [False, embed]
+    return [True, None]
