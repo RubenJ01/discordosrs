@@ -1,6 +1,8 @@
+import asyncio
 import time
 import os
 import json
+from random import randint
 from pathlib import Path
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
@@ -21,10 +23,8 @@ class WoodcuttingTraining(Cog, name="Woodcutting Training"):
         self.time_end = None
         self.amount_cut = None
 
-
     async def event(self):
         pass
-
 
     @has_character()
     @commands.group(name="woodcutting", invoke_without_command=True)
@@ -66,13 +66,25 @@ class WoodcuttingTraining(Cog, name="Woodcutting Training"):
                     # TODO: Make sure to change this to 3600 so it's in hours :P
                     self.time_end = time.time() + (requested_time * 60)
                     while self.time_started < self.time_end:
-                        # cut some fucking wood bruh
+
+                        effeciency_coefficient = randint(5, 10)/10
+                        xp_per_log = data["trees"][index]["xp_per_log"]
+                        xp_per_hour_at_99 = data["trees"][index]["xp_per_hour_at_99"]
+                        # calculate
+                        logs_per_minute = (
+                            xp_per_hour_at_99 / 60 / xp_per_log) * effeciency_coefficient
+                        print(round(logs_per_minute))
+                        await asyncio.sleep(5)
+                        # calc logs cut
+                        # calc exp gained
+
                         if time.time() >= self.time_end:
                             break
                 else:
                     return await ctx.send(embed=time_check[1])
             else:
-                embed = discord.Embed(description=f"You need {required_woodcutting_lvl} woodcutting to cut {log} logs.")
+                embed = discord.Embed(
+                    description=f"You need {required_woodcutting_lvl} woodcutting to cut {log} logs.")
                 return await ctx.send(embed=embed)
         else:
             embed = discord.Embed(description=f"{log} does not exist.")
