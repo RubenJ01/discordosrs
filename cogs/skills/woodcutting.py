@@ -65,19 +65,18 @@ class WoodcuttingTraining(Cog, name="Woodcutting Training"):
                     self.time_started = time.time()
                     # TODO: Make sure to change this to 3600 so it's in hours :P
                     self.time_end = time.time() + (requested_time * 60)
+                    logs_cut = 0
                     while self.time_started < self.time_end:
-
                         effeciency_coefficient = randint(5, 10)/10
                         xp_per_log = data["trees"][index]["xp_per_log"]
                         xp_per_hour_at_99 = data["trees"][index]["xp_per_hour_at_99"]
-                        # calculate
-                        logs_per_minute = (
-                            xp_per_hour_at_99 / 60 / xp_per_log) * effeciency_coefficient
-                        print(round(logs_per_minute))
-                        await asyncio.sleep(5)
-                        # calc logs cut
-                        # calc exp gained
-
+                        logs_per_minute = round((
+                            xp_per_hour_at_99 / 60 / xp_per_log) * effeciency_coefficient)
+                        if logs_cut + logs_per_minute >= 28:
+                            print("gonna bank")
+                            logs_cut = 0
+                        logs_cut = logs_cut + logs_per_minute
+                        await asyncio.sleep(60)
                         if time.time() >= self.time_end:
                             break
                 else:
