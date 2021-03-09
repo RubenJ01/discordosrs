@@ -25,7 +25,7 @@ class WoodcuttingTraining(Cog, name="Woodcutting Training"):
         self.logs_in_inventory = None
         self.total_woodcutting_exp_gained = None
         self.activity_embed = None
-
+        self.session_logs_cut = None
 
     @has_character()
     @commands.group(name="woodcutting", invoke_without_command=True)
@@ -67,20 +67,29 @@ class WoodcuttingTraining(Cog, name="Woodcutting Training"):
                     self.time_started = time.time()
                     # TODO: Make sure to change this to 3600 so it's in hours :P
                     self.time_end = time.time() + (requested_time * 60)
+
+                    # Predifne itteration variables
                     logs_cut = 0
+                    self.session_logs_cut = 0
                     minutes_passed = 0
-                    activity_embed = discord.Embed(description=f"Walking towards {display_log}")
+
+                    activity_embed = discord.Embed(
+                        description=f"Walking towards {display_log}")
                     await ctx.send(embed=activity_embed)
                     await asyncio.sleep(5)
                     while self.time_started < self.time_end:
+                        # Pull data + calculate stuff
                         effeciency_coefficient = randint(5, 10)/10
                         xp_per_log = data["trees"][index]["xp_per_log"]
                         xp_per_hour_at_99 = data["trees"][index]["xp_per_hour_at_99"]
                         logs_per_minute = round((
                             xp_per_hour_at_99 / 60 / xp_per_log) * effeciency_coefficient)
-                        logs_cut = logs_cut + logs_per_minute
-                        self.logs_in_inventory += logs_cut
-                        woodcutting_exp_gained = logs_cut * xp_per_log
+
+                        # Itterate logs and exp
+                        self.logs_in_inventory = self.logs_in_inventory + logs_per_minute
+                        self.session_logs_cut = self.session_logs_cut + logs_per_minute
+                        woodcutting_exp_gained = self.session_logs_cut * xp_per_log
+
                         embed = discord.Embed(description=f"You chop {logs_per_minute} more {display_log}(s) "
                                                           f"({self.logs_in_inventory} total) for "
                                                           f"{woodcutting_exp_gained}")
