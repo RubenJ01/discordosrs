@@ -22,9 +22,10 @@ class WoodcuttingTraining(Cog, name="Woodcutting Training"):
         self.time_started = None
         self.time_end = None
         self.amount_cut = None
+        self.logs_in_inventory = None
+        self.total_woodcutting_exp_gained = None
+        self.activity_embed = None
 
-    async def event(self):
-        pass
 
     @has_character()
     @commands.group(name="woodcutting", invoke_without_command=True)
@@ -54,6 +55,7 @@ class WoodcuttingTraining(Cog, name="Woodcutting Training"):
             woodcutting_lvl = await sql_query(query, values)
             woodcutting_lvl = woodcutting_lvl[0][0]
             required_woodcutting_lvl = data["trees"][index]["level_requirement"]
+            self.logs_in_inventory = 0
             if required_woodcutting_lvl <= woodcutting_lvl:
                 time_check = check_time(requested_time, 1, 8)
                 # the function would then take "time" and return true until the time runs out
@@ -66,20 +68,27 @@ class WoodcuttingTraining(Cog, name="Woodcutting Training"):
                     # TODO: Make sure to change this to 3600 so it's in hours :P
                     self.time_end = time.time() + (requested_time * 60)
                     logs_cut = 0
-                    # TODO: calculate amount of exp earned
-                    # TODO: Send the data to the database every hour
+                    minutes_passed = 0
+                    activity_embed = discord.Embed(description=f"Walking towards {display_log}")
+                    await ctx.send(embed=activity_embed)
+                    await asyncio.sleep(5)
                     while self.time_started < self.time_end:
                         effeciency_coefficient = randint(5, 10)/10
                         xp_per_log = data["trees"][index]["xp_per_log"]
                         xp_per_hour_at_99 = data["trees"][index]["xp_per_hour_at_99"]
                         logs_per_minute = round((
                             xp_per_hour_at_99 / 60 / xp_per_log) * effeciency_coefficient)
-                        if logs_cut + logs_per_minute >= 28:
-                            # TODO: Put logs in the bank, and send logs_cut and exp earning to the database
-                            print("gonna bank")
-                            logs_cut = 0
                         logs_cut = logs_cut + logs_per_minute
+                        self.logs_in_inventory += logs_cut
+                        woodcutting_exp_gained = logs_cut * xp_per_log
+                        embed = discord.Embed(description=f"You chop {logs_per_minute} more {display_log}(s) "
+                                                          f"({self.logs_in_inventory} total) for "
+                                                          f"{woodcutting_exp_gained}")
                         await asyncio.sleep(60)
+                        minutes_passed += 1
+                        if minutes_passed >= 15:
+                            self.logs_in_inventory = 0
+                            minutes_passed = 0
                         if time.time() >= self.time_end:
                             break
                 else:
