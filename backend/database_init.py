@@ -4,9 +4,8 @@ from conn import cur
 cur.execute(
     """
     CREATE TABLE IF NOT EXISTS characters (
-    `id` int auto_increment primary key,
+    discord_id bigint PRIMARY KEY,
     `name` varchar(20),
-    `discord_id` bigint,
     `date_created` datetime DEFAULT CURRENT_TIMESTAMP,
     `last_update` datetime DEFAULT CURRENT_TIMESTAMP,
     `combat_lvl` int DEFAULT 3,
@@ -64,14 +63,13 @@ cur.execute(
 cur.execute(
     """
     CREATE TABLE IF NOT EXISTS bank (
-    id int auto_increment primary key,
-    user_id int,
-    item_type enum ('ressource', 'equipable'),
-    item_id int,
+    discord_id bigint(20) NOT NULL,
+    item_type enum ('ressource', 'equipable') NOT NULL,
+    item_id int NOT NULL,
     amount int,
-
-    FOREIGN KEY (user_id) REFERENCES characters(id)
-    )
+    PRIMARY KEY (discord_id, item_id, item_type),
+    FOREIGN KEY (discord_id) REFERENCES characters(discord_id) ON DELETE CASCADE
+);
 
 """
 )

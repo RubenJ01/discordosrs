@@ -1,6 +1,7 @@
 CREATE TABLE IF NOT EXISTS equipable_items (
     id int auto_increment primary key,
     item_name varchar(40) NOT NULL,
+    
     worn_slot enum ('head', 'cape', 'neck', 'ammunition', 'weapon', 'shield', 'two-hand', 'body', 'legs', 'hands', 'ring'),
     /* The requried lvl for equipping this item*/
     combat_lvl int DEFAULT 3,

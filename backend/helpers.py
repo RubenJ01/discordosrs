@@ -112,14 +112,52 @@ def check_time(requested_time, minimum_time, maximum_time):
     return [True, None]
 
 
-async def deposit_item_to_bank(ctx, item, amount):
-    user = ctx.author.id
-    # TODO: Get the user ID using the discord ID? Or just use Discord ID instead of userID?
-    amount_in_bank = sql_query("""   SELECT amount 
-                    FROM bank 
-                    WHERE user_id = ? and item_id = ?""",
-                               (user, item))
+async def deposit_item_to_bank(ctx, item, item_type, amount):
+    discord_id = ctx.author.id
+    item_id = 0
+
+    # check if we got item_id or item_name in param
+    if (type(item) == 'int'):
+        item_id = item
+    else:
+        if (item_type == 'ressource'):
+            print('ressource')
+            data = await sql_query(""" 
+                SELECT id 
+                FROM resource_items 
+                WHERE item_name = ?
+                """, (item,))
+            item_id = data[0][0]
+        elif (item_type == 'equipable'):
+            data = await sql_query(""" 
+                SELECT id 
+                FROM equipable_items 
+                WHERE item_name = ?
+                """, (item,))
+            item_id = data[0][0]
+
+    # get current amount in bank for this item, type and user
+    amount_in_bank = await sql_query("""   
+        SELECT amount 
+        FROM bank 
+        WHERE discord_id = ? and item_id = ? and item_type = ?
+        """, (discord_id, item_id, item_type,))
     print(amount_in_bank)
+    # if amount_in_bank.len() = 0 then insert into bank, else updtate
+    if (len(amount_in_bank)) == 0:
+        await sql_edit("""
+        INSERT INTO bank (discord_id, item_id, item_type, amount) 
+        values (?, ?, ?, ?)
+        """, (discord_id, item_id, item_type, amount,))
+        print('Inserted item into bank')
+    else:
+        deposit_amount = int(amount_in_bank[0][0]) + int(amount)
+        await sql_edit("""
+            UPDATE bank
+            SET amount = ?
+            WHERE discord_id = ? and item_id = ? and item_type = ? 
+            """, (deposit_amount, discord_id, item_id, item_type,))
+        print('Updated item in the bank')
 
     # TODO: Check to see if the item getting deposited already is in players bank
     pass

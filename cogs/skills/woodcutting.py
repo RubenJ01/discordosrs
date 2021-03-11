@@ -11,7 +11,7 @@ from discord.ext.commands import Cog, command
 from discord.ext import commands
 
 from backend.conn import cur, conn, db
-from backend.helpers import sql_query, sql_edit, gained_exp, check_time
+from backend.helpers import deposit_item_to_bank, sql_query, sql_edit, gained_exp, check_time
 from backend.checks import has_character
 
 
@@ -57,8 +57,7 @@ class WoodcuttingTraining(Cog, name="Woodcutting Training"):
                         description=f"... begins cutting {display_log} logs for {requested_time} hour(s)")
                     await ctx.send(embed=embed)
                     time_started = time.time()
-                    # TODO: Make sure to change this to 3600 so it's in hours :P
-                    time_end = time.time() + (requested_time * 60)
+                    time_end = time.time() + (requested_time * 60)  # TODO: CHANGE TO 3600 FOR HOURS
                     # Predifne itteration variables
                     session_logs_cut = 0
                     minutes_passed = 0
@@ -69,7 +68,7 @@ class WoodcuttingTraining(Cog, name="Woodcutting Training"):
                         if time.time() >= time_end:
                             embed = discord.Embed(description="Done")
                             return await ctx.send(embed=embed)
-                        await asyncio.sleep(1)
+                        await asyncio.sleep(1)  # TODO: CHANGE TO 60
                         # Pull data + calculate stuff
                         effeciency_coefficient = randint(5, 10)/10
                         xp_per_log = data["trees"][index]["xp_per_log"]
@@ -82,17 +81,18 @@ class WoodcuttingTraining(Cog, name="Woodcutting Training"):
                         woodcutting_exp_gained_total = session_logs_cut * xp_per_log
                         woodcutting_exp_gained = logs_per_minute * xp_per_log
                         embed = discord.Embed(description=f"You chop {logs_per_minute} more {display_log}(s) "
-                                                          f"({logs_in_inventory} total) for "
+                                                          f"({session_logs_cut} total) for "
                                                           f"{woodcutting_exp_gained}")
                         await activity_embed.edit(embed=embed)
                         minutes_passed += 1
                         print(minutes_passed)
-                        if minutes_passed >= 15:
-                            # TODO: Send exp earned to the DB.
-                            # TODO: Do we need to call the gained_exp command as well?
+
+                        if minutes_passed >= 5:  # TODO: CHANGE TO 15!!
                             xp_to_add = logs_in_inventory * xp_per_log
                             await gained_exp(ctx, 'woodcutting', xp_to_add)
                             # TODO: Send logs in inventory into the bank
+                            log_type = display_log + '_log'
+                            await deposit_item_to_bank(ctx, log_type, 'ressource', logs_in_inventory)
 
                             logs_in_inventory = 0
                             minutes_passed = 0

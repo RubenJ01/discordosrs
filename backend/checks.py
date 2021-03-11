@@ -16,8 +16,9 @@ class HasCharacter(commands.CheckFailure):
 
 def has_character():
     async def predicate(ctx):
-        user_id = ctx.author.id
-        cur.execute("SELECT `name` FROM `characters` WHERE discord_id = ?", (user_id,))
+        discord_id = ctx.author.id
+        cur.execute(
+            "SELECT `name` FROM `characters` WHERE discord_id = ?", (discord_id,))
         result = cur.fetchall()
         if result:
             # returns true because the users has a character
@@ -29,8 +30,9 @@ def has_character():
 
 def has_no_character():
     async def predicate(ctx):
-        user_id = ctx.author.id
-        cur.execute("SELECT `name` FROM `characters` WHERE discord_id = ?", (user_id,))
+        discord_id = ctx.author.id
+        cur.execute(
+            "SELECT `name` FROM `characters` WHERE discord_id = ?", (discord_id,))
         result = cur.fetchall()
         if result:
             raise HasCharacter
