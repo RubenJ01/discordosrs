@@ -62,7 +62,8 @@ class WoodcuttingTraining(Cog, name="Woodcutting Training"):
                     # Predifne itteration variables
                     session_logs_cut = 0
                     minutes_passed = 0
-                    activity_embed = discord.Embed(description=f"Walking towards {display_log}")
+                    activity_embed = discord.Embed(
+                        description=f"Walking towards {display_log}")
                     activity_embed = await ctx.send(embed=activity_embed)
                     while time_started < time_end:
                         if time.time() >= time_end:
@@ -85,9 +86,17 @@ class WoodcuttingTraining(Cog, name="Woodcutting Training"):
                                                           f"{woodcutting_exp_gained}")
                         await activity_embed.edit(embed=embed)
                         minutes_passed += 1
+                        print(minutes_passed)
                         if minutes_passed >= 15:
+                            # TODO: Send exp earned to the DB.
+                            # TODO: Do we need to call the gained_exp command as well?
+                            xp_to_add = logs_in_inventory * xp_per_log
+                            await gained_exp(ctx, 'woodcutting', xp_to_add)
+                            # TODO: Send logs in inventory into the bank
+
                             logs_in_inventory = 0
                             minutes_passed = 0
+
                 else:
                     return await ctx.send(embed=time_check[1])
             else:

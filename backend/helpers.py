@@ -97,9 +97,24 @@ async def gained_exp(ctx, skill, amount):
 
 def check_time(requested_time, minimum_time, maximum_time):
     if requested_time > maximum_time:
-        embed = discord.Embed(description=f"The maximum time is {maximum_time} hours.")
+        embed = discord.Embed(
+            description=f"The maximum time is {maximum_time} hours.")
         return [False, embed]
     elif requested_time < minimum_time:
-        embed = discord.Embed(description=f"The minimum time is {minimum_time} hour.")
+        embed = discord.Embed(
+            description=f"The minimum time is {minimum_time} hour.")
         return [False, embed]
     return [True, None]
+
+
+async def deposit_item_to_bank(ctx, item, amount):
+    user = ctx.author.id
+    # TODO: Get the user ID using the discord ID? Or just use Discord ID instead of userID?
+    amount_in_bank = sql_query("""   SELECT amount 
+                    FROM bank 
+                    WHERE user_id = ? and item_id = ?""",
+                               (user, item))
+    print(amount_in_bank)
+
+    # TODO: Check to see if the item getting deposited already is in players bank
+    pass
