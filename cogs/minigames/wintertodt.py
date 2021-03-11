@@ -2,7 +2,7 @@ import random
 import asyncio
 import time
 
-from backend.helpers import gained_exp, check_time
+from backend.helpers import gained_exp, check_time, sql_query
 from backend.checks import has_character
 
 import discord
@@ -13,11 +13,13 @@ class WinterTodt(Cog, name="Wintertodt"):
     def __init__(self, bot):
         self.bot = bot
 
-    async def initialize_game(self):
+    async def initialize_game(self, ctx):
         wintertodt_game_time = random.choice([300, 310, 320])
         points_earned = 0
-        firemaking_level = 50
-        woodcutting_level = 50
+        levels = await sql_query("SELECT firemaking_lvl, woodcutting_lvl FROM characters WHERE discord_id = ?",
+                                 (ctx.author.id,))
+        firemaking_level = levels[0][0]
+        woodcutting_level = levels[0][1]
         bruma_roots = 0
         burning_bruma_roots = False
         chopping_bruma_roots = True
@@ -27,7 +29,7 @@ class WinterTodt(Cog, name="Wintertodt"):
                 burning_bruma_roots, chopping_bruma_roots, firemaking_xp_earned, woodcutting_xp_earned]
 
     async def start_game(self, ctx):
-        values = await self.initialize_game()
+        values = await self.initialize_game(ctx)
         # unpacking all the values
         wintertodt_game_time = values[0]
         points_earned = values[1]
@@ -45,6 +47,7 @@ class WinterTodt(Cog, name="Wintertodt"):
                                                    f"{self.bot.get_emoji(815955047417380874)}.")
         activity_embed.set_image(url="https://oldschool.runescape.wiki/images/thumb/7/78/Burning_brazier_"
                                      "%28Wintertodt%29.png/687px-Burning_brazier_%28Wintertodt%29.png?7b131")
+        activity_embed.set_footer(text=ctx.author.name)
         activity_embed = await ctx.send(embed=activity_embed)
         points_earned += 25
         firemaking_xp_earned += xp_earned
@@ -59,6 +62,7 @@ class WinterTodt(Cog, name="Wintertodt"):
                 if danger <= 10:
                     embed = discord.Embed(
                         description="Snow falls upon you interrupting any ongoing activity.")
+                    embed.set_footer(text=ctx.author.name)
                     await activity_embed.edit(embed=embed)
                 elif chopping_bruma_roots:
                     xp_earned = int((woodcutting_level * 0.3) * 2)
@@ -69,6 +73,7 @@ class WinterTodt(Cog, name="Wintertodt"):
                                                       f"({bruma_roots} total)"
                                                       f" earning you {xp_earned} woodcutting experience "
                                                       f"{self.bot.get_emoji(815955047011582053)}. ")
+                    embed.set_footer(text=ctx.author.name)
                     await activity_embed.edit(embed=embed)
                     woodcutting_xp_earned += xp_earned
                     if bruma_roots == 20:
@@ -82,6 +87,7 @@ class WinterTodt(Cog, name="Wintertodt"):
                                                       f"20 points ({points_earned} total) and "
                                                       f"{xp_earned} firemaking experience "
                                                       f"{self.bot.get_emoji(815955047417380874)}.")
+                    embed.set_footer(text=ctx.author.name)
                     await activity_embed.edit(embed=embed)
                     bruma_roots -= 2
                     firemaking_xp_earned += xp_earned
@@ -103,6 +109,7 @@ class WinterTodt(Cog, name="Wintertodt"):
                               description=desc)
         embed.set_image(url="https://oldschool.runescape.wiki/images/thumb/1/15/Howling_Snow_Storm.gif/300px"
                             "-Howling_Snow_Storm.gif?ec549")
+        embed.set_footer(text=ctx.author.name)
         await activity_embed.edit(embed=embed)
 
     async def game_pause(self, ctx):
@@ -110,14 +117,18 @@ class WinterTodt(Cog, name="Wintertodt"):
         embed = discord.Embed(
             description=f"The next wintertodt game is about to start in {wait_time} seconds.")
         await ctx.send(embed=embed)
+        embed.set_footer(text=ctx.author.name)
         await asyncio.sleep(wait_time)
 
     @has_character()
     @command(name="wintertodt")
     async def wintertodt_game_loop(self, ctx, requested_time: int):
         values = check_time(requested_time, 1, 8)
+        character_name = (await sql_query("SELECT name FROM characters WHERE discord_id = ?", (ctx.author.id,)))[0][0]
         if values[0] is True:
-            embed = discord.Embed(description=f"... begins subdueing the Wintertodt for {requested_time} hour(s).")
+            embed = discord.Embed(description=f"{character_name} begins subdueing the Wintertodt for "
+                                              f"{requested_time} hour(s).")
+            embed.set_footer(text=ctx.author.name)
             time_started = time.time()
             time_end = time.time() + (requested_time * 3600)
             await ctx.send(embed=embed)
@@ -127,7 +138,9 @@ class WinterTodt(Cog, name="Wintertodt"):
                     await self.game_pause(ctx)
                 else:
                     break
-            embed = discord.Embed(description=f"... finished doing the Wintertodt for {requested_time} hour(s).")
+            embed = discord.Embed(description=f"{character_name} finished doing the Wintertodt for "
+                                              f"{requested_time} hour(s).")
+            embed.set_footer(text=ctx.author.name)
             return await ctx.send(embed=embed)
         else:
             return await ctx.send(embed=values[1])

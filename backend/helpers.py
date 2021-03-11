@@ -38,6 +38,7 @@ async def gained_exp(ctx, skill, amount):
     - Calculates the new experience total.
     Updates the database for the user.
     """
+    user = ctx.author
     skill_exp_request = f"{skill}_exp"
     skill_lvl_request = f"{skill}_lvl"
     discord_id = ctx.author.id
@@ -81,6 +82,8 @@ async def gained_exp(ctx, skill, amount):
                     query = f"UPDATE characters SET {skill_exp_request} = ?, " \
                             f"{skill_lvl_request} = ? WHERE discord_id = ?"
                     values = (new_skill_xp, new_level, discord_id,)
+                    await user.send(f"Congratulations, you just advanced a {skill} level. Your {skill} level is now "
+                                    f"{new_level}.")
                     return await sql_edit(query, values)
             # if no levels are gained just update the total exp amount
             elif levels_gained == 0:
@@ -92,6 +95,8 @@ async def gained_exp(ctx, skill, amount):
                 new_level = data['levels'][count - 1]['level']
                 query = f"UPDATE characters SET {skill_exp_request} = ?, {skill_lvl_request} = ? WHERE discord_id = ?"
                 values = (new_skill_xp, new_level, discord_id,)
+                await user.send(f"Congratulations, you just advanced a {skill} level. Your {skill} level is now "
+                                f"{new_level}.")
                 return await sql_edit(query, values)
 
 
