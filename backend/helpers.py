@@ -166,3 +166,8 @@ async def deposit_item_to_bank(ctx, item, item_type, amount):
             WHERE discord_id = ? and item_id = ? and item_type = ? 
             """, (deposit_amount, discord_id, item_id, item_type,))
     # TODO: Check to see if the item getting deposited already is in players bank
+
+
+# TODO: create a "withdraw item from bank" function
+# TODO: create a gathering skills tracker table, function
+# TODO: create a boss kill tracker function
