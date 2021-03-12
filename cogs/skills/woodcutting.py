@@ -115,6 +115,8 @@ class WoodcuttingTraining(Cog, name="Woodcutting Training"):
             embed.set_footer(text=ctx.author.name)
             return await ctx.send(embed=embed)
 
+    # TODO: make a stop command for woodcutting
+
 
 def setup(bot):
     bot.add_cog(WoodcuttingTraining(bot))

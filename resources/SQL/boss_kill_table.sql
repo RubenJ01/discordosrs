@@ -7,5 +7,5 @@ CREATE TABLE IF NOT EXISTS enemy_kills (
     kill_count bigint,
 
     FOREIGN KEY (discord_id) REFERENCES characters(discord_id),
-    FOREIGN KEY (boss_id) REFERENCES enemies(id)
+    /*TODO: Remove connection from enemies table so wintertodt cant join*/FOREIGN KEY (boss_id) REFERENCES enemies(id)
 );

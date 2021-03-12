@@ -170,4 +170,6 @@ async def deposit_item_to_bank(ctx, item, item_type, amount):
 
 # TODO: create a "withdraw item from bank" function
 # TODO: create a gathering skills tracker table, function
+
+
 # TODO: create a boss kill tracker function
