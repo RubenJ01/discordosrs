@@ -69,7 +69,7 @@ async def gained_exp(ctx, skill, amount):
         # iterating over every level in the json
         for count, xp in enumerate(data["levels"]):
             # if the level we are currently iterating over is equal to the current skill level we skip it
-            if int(xp["level"]) <= current_skill_lvl:
+            if int(xp["level"]) == current_skill_lvl:
                 pass
             # if the new total exp amount surpasses the one of the next level we note that the user gains
             # at least 1 level
@@ -88,7 +88,7 @@ async def gained_exp(ctx, skill, amount):
                                         f"{new_level}.")
                     elif new_levels_gained == 1:
                         await user.send(
-                            f"Congratulations, you just advanced {levels_gained } {skill} levels. Your {skill} level "
+                            f"Congratulations, you just advanced {new_levels_gained } {skill} levels. Your {skill} level "
                             f"is now {new_level}")
                     return await sql_edit(query, values)
             # if no levels are gained just update the total exp amount
@@ -108,7 +108,7 @@ async def gained_exp(ctx, skill, amount):
                                     f"{new_level}.")
                 elif new_levels_gained > 1:
                     await user.send(
-                        f"Congratulations, you just advanced {levels_gained} {skill} levels. Your {skill} level "
+                        f"Congratulations, you just advanced {new_levels_gained} {skill} levels. Your {skill} level "
                         f"is now {new_level}")
                 return await sql_edit(query, values)
 
@@ -132,8 +132,7 @@ async def deposit_item_to_bank(ctx, item, item_type, amount):
     if type(item) == 'int':
         item_id = item
     else:
-        if item_type == 'ressource':
-            print('ressource')
+        if item_type == 'resource':
             data = await sql_query(""" 
                 SELECT id 
                 FROM resource_items 
@@ -153,14 +152,12 @@ async def deposit_item_to_bank(ctx, item, item_type, amount):
         FROM bank 
         WHERE discord_id = ? and item_id = ? and item_type = ?
         """, (discord_id, item_id, item_type,))
-    print(amount_in_bank)
     # if amount_in_bank.len() = 0 then insert into bank, else updtate
     if (len(amount_in_bank)) == 0:
         await sql_edit("""
         INSERT INTO bank (discord_id, item_id, item_type, amount) 
         values (?, ?, ?, ?)
         """, (discord_id, item_id, item_type, amount,))
-        print('Inserted item into bank')
     else:
         deposit_amount = int(amount_in_bank[0][0]) + int(amount)
         await sql_edit("""
@@ -168,9 +165,4 @@ async def deposit_item_to_bank(ctx, item, item_type, amount):
             SET amount = ?
             WHERE discord_id = ? and item_id = ? and item_type = ? 
             """, (deposit_amount, discord_id, item_id, item_type,))
-        print('Updated item in the bank')
     # TODO: Check to see if the item getting deposited already is in players bank
-    pass
-
-
-

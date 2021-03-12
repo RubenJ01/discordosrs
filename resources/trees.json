@@ -10,14 +10,14 @@
   {
    "name": "oak_tree",
    "log_name": "oak",
-   "xp_per_log": 37.5,
+   "xp_per_log": 38,
    "xp_per_hour_at_99": 40000,
    "level_requirement": 15
   },
   {
    "name": "willow_tree",
    "log_name": "willow",
-   "xp_per_log": 67.5,
+   "xp_per_log": 68,
    "xp_per_hour_at_99": 40000,
    "level_requirement": 30
   },
