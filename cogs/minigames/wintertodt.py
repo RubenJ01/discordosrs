@@ -1,6 +1,7 @@
 import random
 import asyncio
 import time
+import math
 
 from backend.helpers import gained_exp, check_time, sql_query
 from backend.checks import has_character
@@ -65,9 +66,10 @@ class WinterTodt(Cog, name="Wintertodt"):
                     embed.set_footer(text=ctx.author.name)
                     await activity_embed.edit(embed=embed)
                 elif chopping_bruma_roots:
-                    xp_earned = int((woodcutting_level * 0.3) * 2)
+                    xp_earned = math.ceil((woodcutting_level * 0.3) * 2)
                     bruma_roots += 2
-                    embed = discord.Embed(description=f"You chop 2 more bruma roots "
+                    embed = discord.Embed(title="Chopping Bruma Roots",
+                                          description=f"You chop 2 more bruma roots "
                                                       f"{self.bot.get_emoji(815955317619163156)} "
                                                       f"and add them to your inventory "
                                                       f"({bruma_roots} total)"
@@ -82,7 +84,8 @@ class WinterTodt(Cog, name="Wintertodt"):
                 elif burning_bruma_roots:
                     xp_earned = (firemaking_level * 3) * 2
                     points_earned += 20
-                    embed = discord.Embed(description=f"You add 2 bruma roots {self.bot.get_emoji(815955317619163156)}"
+                    embed = discord.Embed(title="Burning Bruma Roots",
+                                          description=f"You add 2 bruma roots {self.bot.get_emoji(815955317619163156)}"
                                                       f" to the fire earning you "
                                                       f"20 points ({points_earned} total) and "
                                                       f"{xp_earned} firemaking experience "
@@ -116,6 +119,7 @@ class WinterTodt(Cog, name="Wintertodt"):
         wait_time = 60
         embed = discord.Embed(
             description=f"The next wintertodt game is about to start in {wait_time} seconds.")
+        embed.set_footer(text=ctx.author.name)
         await ctx.send(embed=embed)
         embed.set_footer(text=ctx.author.name)
         await asyncio.sleep(wait_time)
@@ -144,7 +148,6 @@ class WinterTodt(Cog, name="Wintertodt"):
             return await ctx.send(embed=embed)
         else:
             return await ctx.send(embed=values[1])
-
 
 
 def setup(bot):

@@ -27,7 +27,6 @@ async def sql_edit(sql_code, values=()):
         print(f"sql_edit error: {e}")
         return False
     else:
-        print("Data edited")
         return True
 
 
@@ -82,11 +81,18 @@ async def gained_exp(ctx, skill, amount):
                     query = f"UPDATE characters SET {skill_exp_request} = ?, " \
                             f"{skill_lvl_request} = ? WHERE discord_id = ?"
                     values = (new_skill_xp, new_level, discord_id,)
-                    await user.send(f"Congratulations, you just advanced a {skill} level. Your {skill} level is now "
-                                    f"{new_level}.")
+                    # write the user a dm saying they leveled up depending on the amount of levels they gained
+                    new_levels_gained = int(new_level) - int(current_skill_lvl)
+                    if new_levels_gained > 1:
+                        await user.send(f"Congratulations, you just advanced a {skill} level. Your {skill} level is now "
+                                        f"{new_level}.")
+                    elif new_levels_gained == 1:
+                        await user.send(
+                            f"Congratulations, you just advanced {levels_gained } {skill} levels. Your {skill} level "
+                            f"is now {new_level}")
                     return await sql_edit(query, values)
             # if no levels are gained just update the total exp amount
-            elif levels_gained == 0:
+            elif levels_gained == 1:
                 query = f"UPDATE characters SET {skill_exp_request} = ? WHERE discord_id = ?"
                 values = (new_skill_xp, discord_id,)
                 return await sql_edit(query, values)
@@ -95,8 +101,15 @@ async def gained_exp(ctx, skill, amount):
                 new_level = data['levels'][count - 1]['level']
                 query = f"UPDATE characters SET {skill_exp_request} = ?, {skill_lvl_request} = ? WHERE discord_id = ?"
                 values = (new_skill_xp, new_level, discord_id,)
-                await user.send(f"Congratulations, you just advanced a {skill} level. Your {skill} level is now "
-                                f"{new_level}.")
+                # write the user a dm saying they leveled up depending on the amount of levels they gained
+                new_levels_gained = int(new_level) - int(current_skill_lvl)
+                if new_levels_gained > 1:
+                    await user.send(f"Congratulations, you just advanced a {skill} level. Your {skill} level is now "
+                                    f"{new_level}.")
+                elif new_levels_gained == 1:
+                    await user.send(
+                        f"Congratulations, you just advanced {levels_gained} {skill} levels. Your {skill} level "
+                        f"is now {new_level}")
                 return await sql_edit(query, values)
 
 
@@ -115,12 +128,11 @@ def check_time(requested_time, minimum_time, maximum_time):
 async def deposit_item_to_bank(ctx, item, item_type, amount):
     discord_id = ctx.author.id
     item_id = 0
-
     # check if we got item_id or item_name in param
-    if (type(item) == 'int'):
+    if type(item) == 'int':
         item_id = item
     else:
-        if (item_type == 'ressource'):
+        if item_type == 'ressource':
             print('ressource')
             data = await sql_query(""" 
                 SELECT id 
@@ -128,14 +140,13 @@ async def deposit_item_to_bank(ctx, item, item_type, amount):
                 WHERE item_name = ?
                 """, (item,))
             item_id = data[0][0]
-        elif (item_type == 'equipable'):
+        elif item_type == 'equipable':
             data = await sql_query(""" 
                 SELECT id 
                 FROM equipable_items 
                 WHERE item_name = ?
                 """, (item,))
             item_id = data[0][0]
-
     # get current amount in bank for this item, type and user
     amount_in_bank = await sql_query("""   
         SELECT amount 
@@ -158,6 +169,8 @@ async def deposit_item_to_bank(ctx, item, item_type, amount):
             WHERE discord_id = ? and item_id = ? and item_type = ? 
             """, (deposit_amount, discord_id, item_id, item_type,))
         print('Updated item in the bank')
-
     # TODO: Check to see if the item getting deposited already is in players bank
     pass
+
+
+
