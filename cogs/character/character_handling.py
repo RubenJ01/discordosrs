@@ -46,6 +46,8 @@ class CharacterHandling(Cog, name="Character Handling"):
             description=str(
                 "You have created a character called " + character_name)
         )
+        # make a row for the user in the rooftop courses table
+        await sql_edit("INSERT INTO rooftop_courses (discord_id) VALUES(?)", (discord_id,))
         return await ctx.send(embed=message)
 
     @has_character()

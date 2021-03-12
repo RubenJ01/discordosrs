@@ -103,10 +103,10 @@ async def gained_exp(ctx, skill, amount):
                 values = (new_skill_xp, new_level, discord_id,)
                 # write the user a dm saying they leveled up depending on the amount of levels they gained
                 new_levels_gained = int(new_level) - int(current_skill_lvl)
-                if new_levels_gained > 1:
+                if new_levels_gained == 1:
                     await user.send(f"Congratulations, you just advanced a {skill} level. Your {skill} level is now "
                                     f"{new_level}.")
-                elif new_levels_gained == 1:
+                elif new_levels_gained > 1:
                     await user.send(
                         f"Congratulations, you just advanced {levels_gained} {skill} levels. Your {skill} level "
                         f"is now {new_level}")

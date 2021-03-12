@@ -7,10 +7,10 @@ from backend.conn import cur
 
 startup_extensions = [
     "cogs.minigames.wintertodt",
-    "cogs.character_handling",
-    "cogs.error_handler",
-    "cogs.skill_training",
+    "cogs.character.character_handling",
+    "cogs.misc.error_handler",
     "cogs.skills.woodcutting",
+    "cogs.skills.agility"
 ]
 
 bot = commands.Bot(command_prefix=prefix, help_command=None)

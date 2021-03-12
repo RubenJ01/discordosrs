@@ -9,6 +9,10 @@ cur.execute(
 )
 
 cur.execute(
+    """DROP TABLE IF EXISTS rooftop_courses"""
+)
+
+cur.execute(
     """DROP TABLE IF EXISTS characters"""
 )
 
