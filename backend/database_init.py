@@ -69,9 +69,8 @@ cur.execute(
     amount int,
     PRIMARY KEY (discord_id, item_id, item_type),
     FOREIGN KEY (discord_id) REFERENCES characters(discord_id) ON DELETE CASCADE
-);
-
-"""
+    );
+    """
 )
 
 """Agility Rooftop Lap Count"""
@@ -90,7 +89,7 @@ cur.execute(
     rellekka int default 0,
     ardougne int default 0,
     FOREIGN KEY (discord_id) REFERENCES characters(discord_id) ON DELETE CASCADE
-)
+    )
     """
 )
 
@@ -150,4 +149,20 @@ cur.execute(
         '818923095335108678'
     ) 
     """
+)
+
+cur.execute(
+    """
+    CREATE TABLE IF NOT EXISTS gather_skills_tracker (
+    discord_id int NOT NULL,
+    item_id varchar(40),
+    skill_name enum('mining', 'fishing', 'woodcutting', 'farming'),
+    gather_count bigint,
+
+    PRIMARY KEY (discord_id, item_id),
+    FOREIGN KEY (discord_id) REFERENCES characters(discord_id) ON DELETE CASCADE,
+    FOREGN KEY (item_id) REFRENCES ressource_items(id) ON DELETE CASCADE
+    );
+    """
+
 )
