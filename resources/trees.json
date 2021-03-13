@@ -5,72 +5,63 @@
    "log_name": "normal_log",
    "xp_per_log": 25,
    "xp_per_hour_at_99": 15000,
-   "level_requirement": 1,
-   "image" : "https://oldschool.runescape.wiki/images/thumb/a/ac/Tree.png/223px-Tree.png?dfbdb"
+   "level_requirement": 1
   },
   {
    "name": "oak_tree",
    "log_name": "oak",
    "xp_per_log": 38,
    "xp_per_hour_at_99": 40000,
-   "level_requirement": 15,
-   "image" : "https://oldschool.runescape.wiki/images/thumb/b/bf/Oak.png/250px-Oak.png?db04d"
+   "level_requirement": 15
   },
   {
    "name": "willow_tree",
    "log_name": "willow",
    "xp_per_log": 68,
    "xp_per_hour_at_99": 40000,
-   "level_requirement": 30,
-   "image" : "https://oldschool.runescape.wiki/images/thumb/e/e2/Willow_Single_Canopy.png/229px-Willow_Single_Canopy.png?26d21"
+   "level_requirement": 30
   },
   {
    "name": "teak_tree",
    "log_name": "teak",
    "xp_per_log": 85,
    "xp_per_hour_at_99": 90000,
-   "level_requirement": 35,
-   "image" : "https://oldschool.runescape.wiki/images/thumb/9/91/Teak.png/100px-Teak.png?5c1f3"
+   "level_requirement": 35
   },
   {
    "name": "maple_tree",
    "log_name": "maple",
    "xp_per_log": 100,
    "xp_per_hour_at_99": 60000,
-   "level_requirement": 45,
-   "image" : "https://oldschool.runescape.wiki/images/thumb/4/4b/Maple_tree.png/250px-Maple_tree.png?cbeaf"
+   "level_requirement": 45
   },
   {
    "name": "mahogany_tree",
    "log_name": "mahogany",
    "xp_per_log": 125,
    "xp_per_hour_at_99": 48000,
-   "level_requirement": 50,
-   "image" : "https://oldschool.runescape.wiki/images/thumb/4/4d/Mahogany.png/200px-Mahogany.png?3d107"
+   "level_requirement": 50
   },
   {
    "name": "yew_tree",
    "log_name": "yew",
    "xp_per_log": 175,
    "xp_per_hour_at_99": 38000,
-   "level_requirement": 60,
-   "image" : "https://oldschool.runescape.wiki/images/thumb/e/e8/Yew.png/250px-Yew.png?a579b"
+   "level_requirement": 60
   },
   {
    "name": "magic_tree",
    "log_name": "magic",
    "xp_per_log": 250,
    "xp_per_hour_at_99": 30000,
-   "level_requirement": 75,
-   "image" : "https://oldschool.runescape.wiki/images/thumb/6/64/Magic_tree.png/250px-Magic_tree.png?9943d"
+   "level_requirement": 75
   },
   {
    "name": "redwood_tree",
    "log_name": "redwood",
    "xp_per_log": 380,
    "xp_per_hour_at_99": 70000,
-   "level_requirement": 90,
-   "image" : "https://oldschool.runescape.wiki/images/thumb/d/d5/Redwood_tree.png/170px-Redwood_tree.png?9c38f"
+   "level_requirement": 90
   }
  ]
 }

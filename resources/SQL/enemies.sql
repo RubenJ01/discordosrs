@@ -1,16 +1,19 @@
 CREATE TABLE IF NOT EXISTS enemies (
     id int auto_increment primary key,
-    type enum ('monster', 'boss', 'event'),
+    type enum ('monster', 'boss'),
     /*race/species maybe?*/
     name varchar(40),
-    combat_lvl int default 0,
+    
+    combat_lvl int
+
     /*combat stats*/
-    hit_points int default 0,
-    attack int default 0,
-    strength int default 0,
-    defence int default 0,
-    magic int default 0,
-    ranged int default 0,
+    hit_points int,
+    attack int,
+    strength int,
+    defence int,
+    magic int,
+    ranged int,
+
     /*Agressive stats*/
     stab_attack int default 0,
     slash_attack int default 0,
@@ -24,6 +27,11 @@ CREATE TABLE IF NOT EXISTS enemies (
     magic_defence int default 0,
     ranged_defence int default 0,
     /* immunities */
-    immunte_to_poison boolean default false,
-    immunte_to_venom boolean default false
-);
+    immunte_to_poison boolean,
+    immunte_to_venom boolean
+
+    );
+
+/*DATA*/
+
+INSERT INTO enemies

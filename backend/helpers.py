@@ -168,14 +168,14 @@ async def deposit_item_to_bank(ctx, item, item_type, amount):
 
 
 async def withdraw_item_from_bank(ctx, item, item_type, amount):
-    """A function to withdraw an item from the bank. It takes parameters to find what item is requested, and returns
-    the amount requested, if available, else returns the amount available. example: You have 20 normal logs in the
-    bank, you request to withdraw 10 to train your firemaking skill, the function returns 10. example: You have 20
-    normal logs in the bank, you request to withdraw 30 to train your firemaking skill, the function returns 20.
-    example: You have 0 normal logs in the bank, you request to withdraw 10 to train your firemaking skill,
-    the function returns 0. """
+    """A function to withdraw an item from the bank. It takes parameters to find what item is requested, and returns the amount requested, if available, else returns the amount available.
+    example: You have 20 normal logs in the bank, you request to withdraw 10 to train your firemaking skill, the function returns 10.
+    example: You have 20 normal logs in the bank, you request to withdraw 30 to train your firemaking skill, the function returns 20.
+    example: You have 0 normal logs in the bank, you request to withdraw 10 to train your firemaking skill, the function returns 0."""
+
     discord_id = ctx.author.id
     item_id = 0
+
     # check if we got item_id or item_name in param
     if type(item) == 'int':
         item_id = item
@@ -194,6 +194,7 @@ async def withdraw_item_from_bank(ctx, item, item_type, amount):
                 WHERE item_name = ?
                 """, (item,))
             item_id = data[0][0]
+
     print("Item_ID is ", item_id)
     # get current amount in bank for this item, type and user
     amount_in_bank = await sql_query("""   
