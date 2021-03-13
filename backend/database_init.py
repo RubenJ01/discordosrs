@@ -89,7 +89,7 @@ cur.execute(
     rellekka int default 0,
     ardougne int default 0,
     FOREIGN KEY (discord_id) REFERENCES characters(discord_id) ON DELETE CASCADE
-    );;
+    )
     """
 )
 
@@ -100,56 +100,57 @@ cur.execute(
     id int auto_increment primary key,
     item_name varchar(40) NOT NULL,
     emoji_id char(18)
-    );
+    )
     """
 )
 
+"""Insert items into the resource items table"""
 cur.execute(
     """
-    CREATE TABLE IF NOT EXISTS enemies (
-    id int auto_increment primary key,
-    type enum ('monster', 'boss', 'event'),
-    name varchar(40),
-    combat_lvl int default 0,
-    hit_points int default 0,
-    attack int default 0,
-    strength int default 0,
-    defence int default 0,
-    magic int default 0,
-    ranged int default 0,
-    stab_attack int default 0,
-    slash_attack int default 0,
-    crush_attack int default 0,
-    magic_attack int default 0,
-    ranged_attack int default 0,
-    stab_defence int default 0,
-    slash_defence int default 0,
-    crush_defence int default 0,
-    magic_defence int default 0,
-    ranged_defence int default 0,
-    immunte_to_poison boolean default false,
-    immunte_to_venom boolean default false
-    );
+    INSERT INTO resource_items (
+    item_name,
+    emoji_id
+    )
+    VALUES
+    (
+        'normal_log',
+        '818923094923673611'
+    ),
+    (
+        'oak_log',
+        '818923095481909248'
+    ),
+    (
+        'willow_log',
+        '818923095335108678'
+    ),
+    (
+        'teak_log',
+        '818923095393566820'
+    ),
+    (
+        'maple_log',
+        '818923095192371261'
+    ),
+    (
+        'mahogany_log',
+        '818923095355686993'
+    ),
+    (
+        'yew_log',
+        '818923095376527440'
+    ),
+    (
+        'magic_log',
+        '818923095352016906'
+    ),
+    (
+        'redwood_log',
+        '818923095335108678'
+    ) 
     """
 )
 
-"""Kill Count Table"""
-cur.execute(
-    """
-    CREATE TABLE IF NOT EXISTS enemy_kills (
-    discord_id bigint(20) NOT NULL,
-    boss_id int,
-    boss_name varchar(40),
-    time_of_first_kill datetime DEFAULT CURRENT_TIMESTAMP,
-    kill_count bigint,
-    PRIMARY KEY (discord_id, boss_id),
-    FOREIGN KEY (discord_id) REFERENCES characters(discord_id),
-    FOREIGN KEY (boss_id) REFERENCES enemies(id)
-    );
-    """
-)
-
-"""Gather Skills Tracker Table"""
 cur.execute(
     """
     CREATE TABLE IF NOT EXISTS gather_skills_tracker (
@@ -157,9 +158,11 @@ cur.execute(
     item_id int(11),
     skill_name enum ('mining', 'fishing', 'woodcutting', 'farming'),
     gather_count bigint,
+
     PRIMARY KEY (discord_id, item_id),
     FOREIGN KEY (discord_id) REFERENCES characters(discord_id) ON DELETE CASCADE,
     FOREIGN KEY (item_id) REFERENCES resource_items(id) ON DELETE CASCADE
     );
     """
+
 )

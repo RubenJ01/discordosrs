@@ -8,7 +8,6 @@ from backend.checks import has_character
 
 import discord
 from discord.ext.commands import Cog, command
-from discord.ext import commands
 
 
 class WinterTodt(Cog, name="Wintertodt"):
@@ -75,7 +74,7 @@ class WinterTodt(Cog, name="Wintertodt"):
                                                       f"and add them to your inventory "
                                                       f"({bruma_roots} total)"
                                                       f" earning you {xp_earned} woodcutting experience "
-                                                      f"{self.bot.get_emoji(815955047011582053)}.")
+                                                      f"{self.bot.get_emoji(815955047011582053)}. ")
                     embed.set_footer(text=ctx.author.name)
                     await activity_embed.edit(embed=embed)
                     woodcutting_xp_earned += xp_earned
@@ -126,7 +125,7 @@ class WinterTodt(Cog, name="Wintertodt"):
         await asyncio.sleep(wait_time)
 
     @has_character()
-    @commands.group(name="wintertodt")
+    @command(name="wintertodt")
     async def wintertodt_game_loop(self, ctx, requested_time: int):
         values = check_time(requested_time, 1, 8)
         character_name = (await sql_query("SELECT name FROM characters WHERE discord_id = ?", (ctx.author.id,)))[0][0]
