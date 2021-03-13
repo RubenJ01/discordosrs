@@ -13,7 +13,7 @@ cur.execute(
 )
 
 cur.execute(
-    """DROP TABLE IF EXISTS characters"""
+    """DROP TABLE IF EXISTS gather_skills_tracker"""
 )
 
 cur.execute(
@@ -23,6 +23,21 @@ cur.execute(
 cur.execute(
     """DROP TABLE IF EXISTS resource_items"""
 )
+
+# TODO: Delete at some point
 cur.execute(
     """DROP TABLE IF EXISTS ressource_items"""
+)
+
+cur.execute(
+    """DROP TABLE IF EXISTS enemy_kills"""
+)
+
+cur.execute(
+    """DROP TABLE IF EXISTS enemies"""
+)
+
+
+cur.execute(
+    """DROP TABLE IF EXISTS characters"""
 )
