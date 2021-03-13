@@ -37,7 +37,6 @@ cur.execute(
     """DROP TABLE IF EXISTS enemies"""
 )
 
-
 cur.execute(
     """DROP TABLE IF EXISTS characters"""
 )
