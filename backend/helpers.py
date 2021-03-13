@@ -230,6 +230,40 @@ async def withdraw_item_from_bank(ctx, item, item_type, amount):
 
 
 # TODO: create a gathering skills tracker table, function
+async def add_gathered_item(ctx, item, amount):
+    discord_id = ctx.author.id
+    item_id = 0
+    # check if we got item_id or item_name in param
+    if type(item) == 'int':
+        item_id = item
+    else:
+        data = await sql_query(""" 
+            SELECT id 
+            FROM resource_items 
+            WHERE item_name = ?
+            """, (item,))
+        item_id = data[0][0]
+    # TODO: Check if the item has an instance in the tracker table
+
+    # get current amount in gather_skills_tracker for this item, type and user
+    amount_in_tracker_table = await sql_query("""   
+        SELECT amount 
+        FROM gather_skills_tracker 
+        WHERE discord_id = ? and item_id = ?
+        """, (discord_id, item_id, ))
+    # if amount_in_tracker_table.len() = 0 then insert into gather_skills_tracker, else updtate
+    if (len(amount_in_tracker_table)) == 0:
+        await sql_edit("""
+        INSERT INTO gather_skills_tracker (discord_id, item_id, amount) 
+        values (?, ?, ?, ?)
+        """, (discord_id, item_id, amount,))
+    else:
+        deposit_amount = int(amount_in_tracker_table[0][0]) + int(amount)
+        await sql_edit("""
+            UPDATE gather_skills_tracker
+            SET amount = ?
+            WHERE discord_id = ? and item_id = ?
+            """, (deposit_amount, discord_id, item_id,))
 
 
 # TODO: create a boss kill tracker function
