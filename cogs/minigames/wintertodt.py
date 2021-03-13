@@ -75,7 +75,7 @@ class WinterTodt(Cog, name="Wintertodt"):
                                                       f"and add them to your inventory "
                                                       f"({bruma_roots} total)"
                                                       f" earning you {xp_earned} woodcutting experience "
-                                                      f"{self.bot.get_emoji(815955047011582053)}. ")
+                                                      f"{self.bot.get_emoji(815955047011582053)}.")
                     embed.set_footer(text=ctx.author.name)
                     await activity_embed.edit(embed=embed)
                     woodcutting_xp_earned += xp_earned

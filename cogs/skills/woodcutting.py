@@ -49,13 +49,17 @@ class WoodcuttingTraining(Cog, name="Woodcutting Training"):
             woodcutting_lvl = woodcutting_lvl[0][0]
             required_woodcutting_lvl = data["trees"][index]["level_requirement"]
             logs_in_inventory = 0
+            log_backend_name = "normal_log" if data["trees"][index]["log_name"] == "normal_log" else f"{log}_log"
+            log_emoji = int((await sql_query("SELECT emoji_id FROM resource_items WHERE item_name = ?",
+                                         (log_backend_name,)))[0][0])
             if required_woodcutting_lvl <= woodcutting_lvl:
                 time_check = check_time(requested_time, 1, 8)
                 # the function would then take "time" and return true until the time runs out
                 if time_check[0] is True:
                     display_log = "normal" if log == "log" else log
                     embed = discord.Embed(
-                        description=f"{character_name} begins cutting {display_log} logs for {requested_time} hour(s)")
+                        description=f"{character_name} begins cutting {display_log} logs {self.bot.get_emoji(log_emoji)} "
+                                    f"for {requested_time} hour(s).")
                     embed.set_footer(text=ctx.author.name)
                     await ctx.send(embed=embed)
                     time_started = time.time()
@@ -63,20 +67,25 @@ class WoodcuttingTraining(Cog, name="Woodcutting Training"):
                     # Predifne itteration variables
                     session_logs_cut = 0
                     minutes_passed = 0
+                    total_minutes_passed = 0
                     xp_per_log = data["trees"][index]["xp_per_log"]
                     xp_per_hour_at_99 = data["trees"][index]["xp_per_hour_at_99"]
                     activity_embed = discord.Embed(
-                        description=f"Walking towards {display_log}")
-                    embed.set_footer(text=ctx.author.name)
+                        description=f"Walking towards {display_log} tree.")
+                    activity_embed.set_image(url=data["trees"][index]["image"])
+                    activity_embed.set_footer(text=ctx.author.name)
                     activity_embed = await ctx.send(embed=activity_embed)
                     while time_started < time_end:
                         if time.time() >= time_end:
                             woodcutting_exp_gained_total = session_logs_cut * xp_per_log
                             embed = discord.Embed(title=f"{character_name} finished cutting {display_log} logs "
+                                                        f"{self.bot.get_emoji(log_emoji)} "
                                                         f"for {requested_time} hour(s)",
-                                                  description=f"You cut {session_logs_cut} {display_log} logs earning "
+                                                  description=f"You cut {session_logs_cut} {display_log} logs "
+                                                              f"{self.bot.get_emoji(log_emoji)} earning "
                                                               f"you a total of {woodcutting_exp_gained_total} "
-                                                              f"woodcutting experience.")
+                                                              f"woodcutting experience "
+                                                              f"{self.bot.get_emoji(815955047011582053)}.")
                             embed.set_footer(text=ctx.author.name)
                             return await ctx.send(embed=embed)
                         await asyncio.sleep(60)
@@ -88,10 +97,12 @@ class WoodcuttingTraining(Cog, name="Woodcutting Training"):
                         logs_in_inventory += logs_per_minute
                         session_logs_cut += logs_per_minute
                         woodcutting_exp_gained = logs_per_minute * xp_per_log
+                        total_minutes_passed += 1
                         embed = discord.Embed(description=f"You cut {logs_per_minute} more {display_log} logs "
-                                                          f"({session_logs_cut} total) for "
-                                                          f"{woodcutting_exp_gained} experience.")
-                        embed.set_footer(text=ctx.author.name)
+                                                          f"{self.bot.get_emoji(log_emoji)} ({session_logs_cut} total) "
+                                                          f"for {woodcutting_exp_gained} woodcutting experience "
+                                                          f"{self.bot.get_emoji(815955047011582053)}.")
+                        embed.set_footer(text=f"{ctx.author.name} - Runtime: {total_minutes_passed} minute(s).")
                         await activity_embed.edit(embed=embed)
                         minutes_passed += 1
                         if minutes_passed >= 15:
@@ -115,15 +126,6 @@ class WoodcuttingTraining(Cog, name="Woodcutting Training"):
             return await ctx.send(embed=embed)
 
     # TODO: make a stop command for woodcutting
-
-    # TODO: TEST COMMAND FOR WITHDRAWING FROM BANK
-
-    @has_character()
-    @woodcutting.command(name="withdraw")
-    async def withdraw(self, ctx, log: str, amount: int):
-        amount_withdrawed = await withdraw_item_from_bank(
-            ctx, log, 'resource', amount)
-        await ctx.author.send(f"withdrawed from bank {amount_withdrawed} {log} logs")
 
 
 def setup(bot):
