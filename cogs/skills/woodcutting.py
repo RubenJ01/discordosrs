@@ -108,7 +108,6 @@ class WoodcuttingTraining(Cog, name="Woodcutting Training"):
                         if minutes_passed >= 15:
                             xp_to_add = logs_in_inventory * xp_per_log
                             await gained_exp(ctx, 'woodcutting', xp_to_add)
-                            # TODO: Send logs in inventory into the bank
                             log_type = display_log + '_log'
                             await deposit_item_to_bank(ctx, log_type, 'resource', logs_in_inventory)
                             logs_in_inventory = 0
