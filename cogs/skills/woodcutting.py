@@ -11,7 +11,7 @@ from discord.ext.commands import Cog, command
 from discord.ext import commands
 
 from backend.conn import cur, conn, db
-from backend.helpers import deposit_item_to_bank, sql_query, sql_edit, gained_exp, check_time
+from backend.helpers import withdraw_item_from_bank, deposit_item_to_bank, sql_query, sql_edit, gained_exp, check_time
 from backend.checks import has_character
 
 
@@ -116,6 +116,15 @@ class WoodcuttingTraining(Cog, name="Woodcutting Training"):
             return await ctx.send(embed=embed)
 
     # TODO: make a stop command for woodcutting
+
+    # TODO: TEST COMMAND FOR WITHDRAWING FROM BANK
+
+    @has_character()
+    @woodcutting.command(name="withdraw")
+    async def withdraw(self, ctx, log: str, amount: int):
+        amount_withdrawed = await withdraw_item_from_bank(
+            ctx, log, 'resource', amount)
+        await ctx.author.send(f"withdrawed from bank {amount_withdrawed} {log} logs")
 
 
 def setup(bot):

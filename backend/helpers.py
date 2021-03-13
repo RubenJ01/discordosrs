@@ -165,10 +165,70 @@ async def deposit_item_to_bank(ctx, item, item_type, amount):
             SET amount = ?
             WHERE discord_id = ? and item_id = ? and item_type = ? 
             """, (deposit_amount, discord_id, item_id, item_type,))
-    # TODO: Check to see if the item getting deposited already is in players bank
 
 
-# TODO: create a "withdraw item from bank" function
+async def withdraw_item_from_bank(ctx, item, item_type, amount):
+    """A function to withdraw an item from the bank. It takes parameters to find what item is requested, and returns the amount requested, if available, else returns the amount available.
+    example: You have 20 normal logs in the bank, you request to withdraw 10 to train your firemaking skill, the function returns 10.
+    example: You have 20 normal logs in the bank, you request to withdraw 30 to train your firemaking skill, the function returns 20.
+    example: You have 0 normal logs in the bank, you request to withdraw 10 to train your firemaking skill, the function returns 0."""
+
+    discord_id = ctx.author.id
+    item_id = 0
+
+    # check if we got item_id or item_name in param
+    if type(item) == 'int':
+        item_id = item
+    else:
+        if item_type == 'resource':
+            data = await sql_query(""" 
+                SELECT id 
+                FROM resource_items 
+                WHERE item_name = ?
+                """, (item,))
+            item_id = data[0][0]
+        elif item_type == 'equipable':
+            data = await sql_query(""" 
+                SELECT id 
+                FROM equipable_items 
+                WHERE item_name = ?
+                """, (item,))
+            item_id = data[0][0]
+
+    print("Item_ID is ", item_id)
+    # get current amount in bank for this item, type and user
+    amount_in_bank = await sql_query("""   
+        SELECT amount 
+        FROM bank 
+        WHERE discord_id = ? and item_id = ? and item_type = ?
+        """, (discord_id, item_id, item_type,))
+    print("Amount in bank", amount_in_bank)
+    # check if requested item is in the bank
+    if (len(amount_in_bank)) == 0:
+        return 0
+    # check if requested amount is more than available amount in bank
+    else:
+        amount_in_bank = amount_in_bank[0][0]
+        if (amount_in_bank < amount):
+            # delete the amount in the bank, cause all is withdrawed
+            await sql_edit("""
+                DELETE
+                FROM bank
+                WHERE discord_id = ? and item_id = ? and item_type = ? 
+                """, (discord_id, item_id, item_type,))
+            print("attemted to delete from bank")
+            return amount_in_bank
+        else:
+            amount_in_bank = amount_in_bank - amount
+            await sql_edit("""
+                UPDATE bank
+                SET amount = ?
+                WHERE discord_id = ? and item_id = ? and item_type = ? 
+                """, (amount_in_bank, discord_id, item_id, item_type,))
+            print("attemted to update bank")
+            return amount
+
+
 # TODO: create a gathering skills tracker table, function
 
 

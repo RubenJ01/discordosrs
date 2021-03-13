@@ -23,3 +23,6 @@ cur.execute(
 cur.execute(
     """DROP TABLE IF EXISTS resource_items"""
 )
+cur.execute(
+    """DROP TABLE IF EXISTS ressource_items"""
+)
