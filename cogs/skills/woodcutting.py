@@ -55,11 +55,11 @@ class WoodcuttingTraining(Cog, name="Woodcutting Training"):
                 if time_check[0] is True:
                     display_log = "normal" if log == "log" else log
                     embed = discord.Embed(
-                        description=f"... begins cutting {display_log} logs for {requested_time} hour(s)")
+                        description=f"{character_name} begins cutting {display_log} logs for {requested_time} hour(s)")
                     embed.set_footer(text=ctx.author.name)
                     await ctx.send(embed=embed)
                     time_started = time.time()
-                    time_end = time.time() + (requested_time * 60)  # TODO: CHANGE TO 3600 FOR HOURS
+                    time_end = time.time() + (requested_time * 3600)
                     # Predifne itteration variables
                     session_logs_cut = 0
                     minutes_passed = 0
@@ -79,7 +79,7 @@ class WoodcuttingTraining(Cog, name="Woodcutting Training"):
                                                               f"woodcutting experience.")
                             embed.set_footer(text=ctx.author.name)
                             return await ctx.send(embed=embed)
-                        await asyncio.sleep(1)  # TODO: CHANGE TO 60
+                        await asyncio.sleep(60)
                         # Pull data + calculate stuff
                         effeciency_coefficient = randint(5, 10)/10
                         logs_per_minute = round((
@@ -88,13 +88,13 @@ class WoodcuttingTraining(Cog, name="Woodcutting Training"):
                         logs_in_inventory += logs_per_minute
                         session_logs_cut += logs_per_minute
                         woodcutting_exp_gained = logs_per_minute * xp_per_log
-                        embed = discord.Embed(description=f"You cut {logs_per_minute} more {display_log} logs"
+                        embed = discord.Embed(description=f"You cut {logs_per_minute} more {display_log} logs "
                                                           f"({session_logs_cut} total) for "
                                                           f"{woodcutting_exp_gained} experience.")
                         embed.set_footer(text=ctx.author.name)
                         await activity_embed.edit(embed=embed)
                         minutes_passed += 1
-                        if minutes_passed >= 5:  # TODO: CHANGE TO 15!!
+                        if minutes_passed >= 15:
                             xp_to_add = logs_in_inventory * xp_per_log
                             await gained_exp(ctx, 'woodcutting', xp_to_add)
                             # TODO: Send logs in inventory into the bank
@@ -102,7 +102,6 @@ class WoodcuttingTraining(Cog, name="Woodcutting Training"):
                             await deposit_item_to_bank(ctx, log_type, 'resource', logs_in_inventory)
                             logs_in_inventory = 0
                             minutes_passed = 0
-
                 else:
                     return await ctx.send(embed=time_check[1])
             else:
