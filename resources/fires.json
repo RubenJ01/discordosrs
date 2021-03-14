@@ -1,0 +1,76 @@
+{
+  "fires": [
+    {
+      "name": "regular_tree",
+      "log_name": "normal_log",
+      "xp_per_fire": 40,
+      "xp_per_hour_at_99": 59400,
+      "level_requirement": 1,
+      "image": ""
+    },
+    {
+      "name": "oak_tree",
+      "log_name": "oak",
+      "xp_per_fire": 60,
+      "xp_per_hour_at_99": 89100,
+      "level_requirement": 15,
+      "image": ""
+    },
+    {
+      "name": "willow_tree",
+      "log_name": "willow",
+      "xp_per_fire": 90,
+      "xp_per_hour_at_99": 133650,
+      "level_requirement": 30,
+      "image": ""
+    },
+    {
+      "name": "teak_tree",
+      "log_name": "teak",
+      "xp_per_fire": 105,
+      "xp_per_hour_at_99": 155925,
+      "level_requirement": 35,
+      "image": ""
+    },
+    {
+      "name": "maple_tree",
+      "log_name": "maple",
+      "xp_per_fire": 135,
+      "xp_per_hour_at_99": 200475,
+      "level_requirement": 45,
+      "image": ""
+    },
+    {
+      "name": "mahogany_tree",
+      "log_name": "mahogany",
+      "xp_per_fire": 158,
+      "xp_per_hour_at_99": 233888,
+      "level_requirement": 50,
+      "image": ""
+    },
+    {
+      "name": "yew_tree",
+      "log_name": "yew",
+      "xp_per_fire": 203,
+      "xp_per_hour_at_99": 300712.5,
+      "level_requirement": 60,
+      "image": ""
+    },
+    {
+      "name": "magic_tree",
+      "log_name": "magic",
+      "xp_per_fire": 304,
+      "xp_per_hour_at_99": 451143,
+      "level_requirement": 75,
+      "image": ""
+    },
+    {
+      "name": "redwood_tree",
+      "log_name": "redwood",
+      "xp_per_fire": 380,
+      "xp_per_hour_at_99": 519750,
+      "level_requirement": 90,
+      "image": ""
+    }
+  ]
+}

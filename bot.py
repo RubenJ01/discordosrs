@@ -10,7 +10,8 @@ startup_extensions = [
     "cogs.character.character_handling",
     "cogs.misc.error_handler",
     "cogs.skills.woodcutting",
-    "cogs.skills.agility"
+    "cogs.skills.agility",
+    "cogs.skills.firemaking",
 ]
 
 bot = commands.Bot(command_prefix=prefix, help_command=None)

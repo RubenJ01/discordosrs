@@ -49,9 +49,10 @@ class WoodcuttingTraining(Cog, name="Woodcutting Training"):
             woodcutting_lvl = woodcutting_lvl[0][0]
             required_woodcutting_lvl = data["trees"][index]["level_requirement"]
             logs_in_inventory = 0
-            log_backend_name = "normal_log" if data["trees"][index]["log_name"] == "normal_log" else f"{log}_log"
+            log_backend_name = "normal_log" if data["trees"][
+                index]["log_name"] == "normal_log" else f"{log}_log"
             log_emoji = int((await sql_query("SELECT emoji_id FROM resource_items WHERE item_name = ?",
-                                         (log_backend_name,)))[0][0])
+                                             (log_backend_name,)))[0][0])
             if required_woodcutting_lvl <= woodcutting_lvl:
                 time_check = check_time(requested_time, 1, 8)
                 # the function would then take "time" and return true until the time runs out
@@ -63,7 +64,7 @@ class WoodcuttingTraining(Cog, name="Woodcutting Training"):
                     embed.set_footer(text=ctx.author.name)
                     await ctx.send(embed=embed)
                     time_started = time.time()
-                    time_end = time.time() + (requested_time * 3600)
+                    time_end = time.time() + (requested_time * 60)  # TODO: This is the timer
                     # Predifne itteration variables
                     session_logs_cut = 0
                     minutes_passed = 0
@@ -88,7 +89,7 @@ class WoodcuttingTraining(Cog, name="Woodcutting Training"):
                                                               f"{self.bot.get_emoji(815955047011582053)}.")
                             embed.set_footer(text=ctx.author.name)
                             return await ctx.send(embed=embed)
-                        await asyncio.sleep(60)
+                        await asyncio.sleep(1)  # TODO: This is the ticker time
                         # Pull data + calculate stuff
                         effeciency_coefficient = randint(5, 10)/10
                         logs_per_minute = round((
@@ -102,7 +103,8 @@ class WoodcuttingTraining(Cog, name="Woodcutting Training"):
                                                           f"{self.bot.get_emoji(log_emoji)} ({session_logs_cut} total) "
                                                           f"for {woodcutting_exp_gained} woodcutting experience "
                                                           f"{self.bot.get_emoji(815955047011582053)}.")
-                        embed.set_footer(text=f"{ctx.author.name} - Runtime: {total_minutes_passed} minute(s).")
+                        embed.set_footer(
+                            text=f"{ctx.author.name} - Runtime: {total_minutes_passed} minute(s).")
                         await activity_embed.edit(embed=embed)
                         minutes_passed += 1
                         if minutes_passed >= 15:
