@@ -1,6 +1,6 @@
 import math
 
-from backend.checks import NoCharacter, HasCharacter
+from backend.checks import NoCharacter, HasCharacter, RequiredLevelNotMet
 
 import discord
 from discord.ext import commands
@@ -32,6 +32,9 @@ class CommandErrorHandler(commands.Cog, name='ErrorHandler'):
             return await ctx.send(embed=embed)
         elif isinstance(error, HasCharacter):
             embed = discord.Embed(description="You already have a character.")
+            return await ctx.send(embed=embed)
+        elif isinstance(error, RequiredLevelNotMet):
+            embed = discord.Embed(description="You are not high enough level to use this command.")
             return await ctx.send(embed=embed)
         else:
             raise error

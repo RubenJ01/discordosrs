@@ -22,7 +22,28 @@ class WoodcuttingTraining(Cog, name="Woodcutting Training"):
     @has_character()
     @commands.group(name="woodcutting", invoke_without_command=True)
     async def woodcutting(self, ctx):
-        pass
+        desc = f"Woodcutting is a gathering skill that primarily involves cutting down trees to obtain logs that can " \
+               f"be used to make money or train other skills such as firemaking " \
+               f"{self.bot.get_emoji(815955047417380874)}.\n\n" \
+               f"**Usage:**\n" \
+               f";woodcutting - *This message.*\n" \
+               f";woodcutting stats - *Shows specifc stats about how much logs you cut.*\n" \
+               f";woodcutting cut [log] [time] - *Cut a specific log for a specific amount of time*.\n" \
+               f";woodcutting stop - *Stop Woodcutting.*\n\n" \
+               f"**Logs:**\n" \
+               f"*Normal {self.bot.get_emoji(818923094923673611)}:* level requirement = 1, xp pr. hour = 15.000.\n" \
+               f"*Oak {self.bot.get_emoji(818923095481909248)}:* level requirement = 15, xp pr. hour = 40.000.\n" \
+               f"*Willow {self.bot.get_emoji(818923095335108678)}:* level requirement = 30, xp pr. hour = 40.000.\n" \
+               f"*Teak {self.bot.get_emoji(818923095393566820)}:* level requirement = 35, xp pr. hour = 90.000.\n" \
+               f"*Maple {self.bot.get_emoji(818923095192371261)}:* level requirement = 45, xp pr. hour = 60.000.\n" \
+               f"*Mahogany {self.bot.get_emoji(818923095355686993)}:* level requirement = 50, xp pr. hour = 48.000.\n" \
+               f"*Yew {self.bot.get_emoji(818923095376527440)}:* level requirement = 60, xp pr. hour = 38.000.\n" \
+               f"*Magic {self.bot.get_emoji(818923095352016906)}:* level requirement = 75, xp pr. hour = 30.000.\n" \
+               f"*Redwood {self.bot.get_emoji(818923095335108678)}:* level requirement = 90, xp pr. hour = 70.000.\n"
+        embed = discord.Embed(title=f"Woodcutting {self.bot.get_emoji(815955047011582053)}", description=desc)
+        embed.set_footer(text=ctx.author.name)
+        return await ctx.send(embed=embed)
+
 
     @has_character()
     @woodcutting.command(name="stats")

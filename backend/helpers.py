@@ -200,21 +200,19 @@ async def withdraw_item_from_bank(ctx, item, item_type, amount):
         FROM bank 
         WHERE discord_id = ? and item_id = ? and item_type = ?
         """, (discord_id, item_id, item_type,))
-    print("Amount in bank", amount_in_bank)
     # check if requested item is in the bank
     if (len(amount_in_bank)) == 0:
         return 0
     # check if requested amount is more than available amount in bank
     else:
         amount_in_bank = amount_in_bank[0][0]
-        if (amount_in_bank < amount):
+        if amount_in_bank < amount:
             # delete the amount in the bank, cause all is withdrawed
             await sql_edit("""
                 DELETE
                 FROM bank
                 WHERE discord_id = ? and item_id = ? and item_type = ? 
                 """, (discord_id, item_id, item_type,))
-            print("attemted to delete from bank")
             return amount_in_bank
         else:
             amount_in_bank = amount_in_bank - amount
@@ -223,7 +221,6 @@ async def withdraw_item_from_bank(ctx, item, item_type, amount):
                 SET amount = ?
                 WHERE discord_id = ? and item_id = ? and item_type = ? 
                 """, (amount_in_bank, discord_id, item_id, item_type,))
-            print("attemted to update bank")
             return amount
 
 

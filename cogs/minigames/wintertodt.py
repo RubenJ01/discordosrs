@@ -4,7 +4,7 @@ import time
 import math
 
 from backend.helpers import gained_exp, check_time, sql_query
-from backend.checks import has_character
+from backend.checks import has_character, has_level
 
 import discord
 from discord.ext.commands import Cog, command
@@ -126,6 +126,7 @@ class WinterTodt(Cog, name="Wintertodt"):
         await asyncio.sleep(wait_time)
 
     @has_character()
+    @has_level("firemaking", 50)
     @commands.group(name="wintertodt")
     async def wintertodt_game_loop(self, ctx, requested_time: int):
         values = check_time(requested_time, 1, 8)
