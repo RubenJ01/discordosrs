@@ -194,7 +194,6 @@ async def withdraw_item_from_bank(ctx, item, item_type, amount):
                 WHERE item_name = ?
                 """, (item,))
             item_id = data[0][0]
-    print("Item_ID is ", item_id)
     # get current amount in bank for this item, type and user
     amount_in_bank = await sql_query("""   
         SELECT amount 
@@ -226,6 +225,37 @@ async def withdraw_item_from_bank(ctx, item, item_type, amount):
                 """, (amount_in_bank, discord_id, item_id, item_type,))
             print("attemted to update bank")
             return amount
+
+
+async def check_amount_in_bank(ctx, item, item_type):
+    discord_id = ctx.author.id
+    item_id = 0
+    # check if we got item_id or item_name in param
+    if type(item) == 'int':
+        item_id = item
+    else:
+        if item_type == 'resource':
+            data = await sql_query(""" 
+                SELECT id 
+                FROM resource_items 
+                WHERE item_name = ?
+                """, (item,))
+            item_id = data[0][0]
+        elif item_type == 'equipable':
+            data = await sql_query(""" 
+                SELECT id 
+                FROM equipable_items 
+                WHERE item_name = ?
+                """, (item,))
+            item_id = data[0][0]
+    print("Item_ID is ", item_id)
+    # get current amount in bank for this item, type and user
+    amount_in_bank = await sql_query("""   
+        SELECT amount 
+        FROM bank 
+        WHERE discord_id = ? and item_id = ? and item_type = ?
+        """, (discord_id, item_id, item_type,))
+    return amount_in_bank
 
 
 # TODO: create a gathering skills tracker table, function
