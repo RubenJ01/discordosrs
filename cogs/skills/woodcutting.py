@@ -40,10 +40,10 @@ class WoodcuttingTraining(Cog, name="Woodcutting Training"):
                f"*Yew {self.bot.get_emoji(818923095376527440)}:* level requirement = 60, xp pr. hour = 38.000.\n" \
                f"*Magic {self.bot.get_emoji(818923095352016906)}:* level requirement = 75, xp pr. hour = 30.000.\n" \
                f"*Redwood {self.bot.get_emoji(818923095335108678)}:* level requirement = 90, xp pr. hour = 70.000.\n"
-        embed = discord.Embed(title=f"Woodcutting {self.bot.get_emoji(815955047011582053)}", description=desc)
+        embed = discord.Embed(
+            title=f"Woodcutting {self.bot.get_emoji(815955047011582053)}", description=desc)
         embed.set_footer(text=ctx.author.name)
         return await ctx.send(embed=embed)
-
 
     @has_character()
     @woodcutting.command(name="stats")

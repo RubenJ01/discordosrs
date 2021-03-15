@@ -53,7 +53,7 @@ class FiremakingTraining(Cog, name="Firemaking Training"):
             # log_emoji = int((await sql_query("SELECT emoji_id FROM resource_items WHERE item_name = ?",
             #                                 (log_backend_name,)))[0][0])
         print(firemaking_lvl, " cur_lvl vs ",
-              required_firemaking_lvl, " lvl needed to cut ", log_backend_name)
+              required_firemaking_lvl, " lvl needed to light ", log_backend_name)
         if required_firemaking_lvl <= firemaking_lvl:
             time_check = check_time(requested_time,
                                     1, 8)
@@ -75,7 +75,7 @@ class FiremakingTraining(Cog, name="Firemaking Training"):
                 session_time = 15
                 xp_per_fire = data["fires"][index]["xp_per_fire"]
                 xp_per_hour_at_99 = data["fires"][index]["xp_per_hour_at_99"]
-                fires_per_minute = (xp_per_hour_at_99 / 60 / xp_per_fire)
+                fires_per_minute = round(xp_per_hour_at_99 / 60 / xp_per_fire)
                 activity_embed = discord.Embed(
                     description=f"Getting ready to lighgt {display_log} logs on fire.")
                 # TODO: add a picture activity_embed.set_image(url=data["trees"][index]["image"])
@@ -83,10 +83,18 @@ class FiremakingTraining(Cog, name="Firemaking Training"):
                 activity_embed = await ctx.send(embed=activity_embed)
                 first_run = True
                 while time_started < time_end:
-
-                    # TODO: Add a check to see if user has enough wood for session?
                     if time.time() >= time_end:
                         firemaking_exp_gained_total = session_fires_lighted * xp_per_fire
+                        embed = discord.Embed(title=f"{character_name} finished lighting {display_log} logs on fire "
+                                                    f" EMOJI ID LOG "
+                                                    f"for {requested_time} hour(s)",
+                                              description=f"You cut {session_fires_lighted} {display_log} logs "
+                                                    f" EMOJI ID LOG earning "
+                                                    f"you a total of {firemaking_exp_gained_total} "
+                                                    f"woodcutting experience "
+                                                    f" EOMJI ID FIRE.")
+                        embed.set_footer(text=ctx.author.name)
+                        return await ctx.send(embed=embed)
                         # TODO: Add the embed to tell user he's finished and how much he's done.
                     logs_needed = fires_per_minute * session_time
                     await asyncio.sleep(1)  # TODO: This is the ticker time
