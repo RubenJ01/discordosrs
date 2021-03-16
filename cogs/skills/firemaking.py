@@ -31,8 +31,7 @@ class FiremakingTraining(Cog, name="Firemaking Training"):
         pass
 
     @firemaking.command(name="light")
-    async def train_firemaking(selv, ctx, log: str, requested_time):
-
+    async def train_firemaking(selv, ctx, log: str, requested_time: int):
         character_name = (await sql_query("SELECT name FROM characters WHERE discord_id = ?", (ctx.author.id,)))[0][0]
         path_ = Path(os.getcwd(), "resources", "fires.json")
         with open(path_, "r") as f:

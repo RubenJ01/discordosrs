@@ -29,7 +29,8 @@ class WoodcuttingTraining(Cog, name="Woodcutting Training"):
                f";woodcutting - *This message.*\n" \
                f";woodcutting stats - *Shows specifc stats about how much logs you cut.*\n" \
                f";woodcutting cut [log] [time] - *Cut a specific log for a specific amount of time*.\n" \
-               f";woodcutting stop - *Stop Woodcutting.*\n\n" \
+               f";woodcutting stop - *Stop Woodcutting.*\n" \
+               f";woodcutting leaderboard - *Shows the leaderboard for the woodcutting skill.*\n\n" \
                f"**Logs:**\n" \
                f"*Normal {self.bot.get_emoji(818923094923673611)}:* level requirement = 1, xp pr. hour = 15.000.\n" \
                f"*Oak {self.bot.get_emoji(818923095481909248)}:* level requirement = 15, xp pr. hour = 40.000.\n" \

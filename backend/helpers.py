@@ -248,7 +248,6 @@ async def check_amount_in_bank(ctx, item, item_type):
                 WHERE item_name = ?
                 """, (item,))
             item_id = data[0][0]
-    print("Item_ID is ", item_id)
     # get current amount in bank for this item, type and user
     amount_in_bank = await sql_query("""   
         SELECT amount 
@@ -258,7 +257,29 @@ async def check_amount_in_bank(ctx, item, item_type):
     return amount_in_bank
 
 
+async def add_kill_count(ctx, boss_id, amount_of_kills):
+    """
+    Adds killcount for a specific boss and user.
+    If the user already has killcount for this boss update the row.
+    Otherwise create a new row.
+    """
+    # Check if the user already has killcount for the boss
+    query = f"SELECT kill_count FROM enemy_kills WHERE discord_id = ? AND boss_id = ?"
+    kill_count = await sql_query(query, (ctx.author.id, boss_id,))
+    if len(kill_count) == 0:
+        # no killcount has been obtained yet for this boss
+        # add kill count for the boss
+        query = "INSERT INTO enemy_kills (discord_id, boss_id, kill_count) VALUES(?, ?, ?)"
+        values = (ctx.author.id, boss_id, amount_of_kills,)
+        return await sql_edit(query, values)
+    else:
+        # kill count has already been obtained
+        # update the new kill count
+        new_kill_count = kill_count[0][0] + amount_of_kills
+        query = "UPDATE enemy_kills SET kill_count = ? WHERE discord_id = ? AND boss_id = ?"
+        values = (new_kill_count, ctx.author.id, boss_id,)
+        return await sql_edit(query, values)
+
+
 # TODO: create a gathering skills tracker table, function
 
-
-# TODO: create a boss kill tracker function
