@@ -114,6 +114,9 @@ async def gained_exp(ctx, skill, amount):
 
 
 def check_time(requested_time, minimum_time, maximum_time):
+    # TODO: Do some regex to check if there's an m or an h
+    # If none of those, assume its an hour
+
     if requested_time > maximum_time:
         embed = discord.Embed(
             description=f"The maximum time is {maximum_time} hours.")

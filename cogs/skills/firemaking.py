@@ -2,6 +2,7 @@ import asyncio
 import time
 import os
 import json
+import re
 from random import randint
 from pathlib import Path
 
@@ -30,7 +31,8 @@ class FiremakingTraining(Cog, name="Firemaking Training"):
         pass
 
     @firemaking.command(name="light")
-    async def train_firemaking(selv, ctx, log: str, requested_time: int):
+    async def train_firemaking(selv, ctx, log: str, requested_time):
+
         character_name = (await sql_query("SELECT name FROM characters WHERE discord_id = ?", (ctx.author.id,)))[0][0]
         path_ = Path(os.getcwd(), "resources", "fires.json")
         with open(path_, "r") as f:
@@ -104,8 +106,9 @@ class FiremakingTraining(Cog, name="Firemaking Training"):
                     if (minutes_passed >= session_time or (first_run == True and minutes_passed == 0)):
                         logs_in_inventory = await withdraw_item_from_bank(
                             ctx, log_backend_name, 'resource', logs_needed)
+                        # if this isnt the first run, then 15 minutes have passed and we add the exp to the database.
                         if not first_run:
-                            xp_to_add = fires_lighted + xp_per_fire
+                            xp_to_add = fires_lighted * xp_per_fire
                             await gained_exp(ctx, 'firemaking', xp_to_add)
                             fires_lighted = 0
                         first_run = False
