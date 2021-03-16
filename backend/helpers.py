@@ -114,28 +114,34 @@ async def gained_exp(ctx, skill, amount):
                 return await sql_edit(query, values)
 
 
-def check_time(requested_time, minimum_time, maximum_time):
-    # TODO: Do some regex to check if there's an m or an h
+def check_time(requested_time):
+    minimum_time = 15
+    maximum_time = 8*60
+
+    # TODO: REMAKE INTO MINUTES
     # If none of those, assume its an hour
-    hour = re.compile('h')
+    print(requested_time)
     minutes = re.compile('m')
-
-    if hour.search(requested_time).group() == 'h':
-        print('user wants an hour')
-    elif minutes.search(requested_time).group() == 'm':
-        print('user wants a minute')
+    time = 0
+    digits = re.compile(r'\d*')
+    if not digits.search(requested_time) == None:
+        time = int(digits.search(requested_time).group())
     else:
-        print('user dont care, so we give them hour')
+        embed = discord.Embed(
+            description=f"Input {requested_time} contains no digits")
+        return [0, embed]
+    if minutes.search(requested_time) == None:
+        time = time * 60
 
-    if requested_time > maximum_time:
+    if time > maximum_time:
         embed = discord.Embed(
             description=f"The maximum time is {maximum_time} hours.")
-        return [False, embed]
-    elif requested_time < minimum_time:
+        return [0, embed]
+    elif time < minimum_time:
         embed = discord.Embed(
             description=f"The minimum time is {minimum_time} hour.")
-        return [False, embed]
-    return [True, None]
+        return [0, embed]
+    return [time, None]
 
 
 async def deposit_item_to_bank(ctx, item, item_type, amount):
@@ -146,29 +152,29 @@ async def deposit_item_to_bank(ctx, item, item_type, amount):
         item_id = item
     else:
         if item_type == 'resource':
-            data = await sql_query(""" 
-                SELECT id 
-                FROM resource_items 
+            data = await sql_query("""
+                SELECT id
+                FROM resource_items
                 WHERE item_name = ?
                 """, (item,))
             item_id = data[0][0]
         elif item_type == 'equipable':
-            data = await sql_query(""" 
-                SELECT id 
-                FROM equipable_items 
+            data = await sql_query("""
+                SELECT id
+                FROM equipable_items
                 WHERE item_name = ?
                 """, (item,))
             item_id = data[0][0]
     # get current amount in bank for this item, type and user
-    amount_in_bank = await sql_query("""   
-        SELECT amount 
-        FROM bank 
+    amount_in_bank = await sql_query("""
+        SELECT amount
+        FROM bank
         WHERE discord_id = ? and item_id = ? and item_type = ?
         """, (discord_id, item_id, item_type,))
     # if amount_in_bank.len() = 0 then insert into bank, else updtate
     if (len(amount_in_bank)) == 0:
         await sql_edit("""
-        INSERT INTO bank (discord_id, item_id, item_type, amount) 
+        INSERT INTO bank (discord_id, item_id, item_type, amount)
         values (?, ?, ?, ?)
         """, (discord_id, item_id, item_type, amount,))
     else:
@@ -176,7 +182,7 @@ async def deposit_item_to_bank(ctx, item, item_type, amount):
         await sql_edit("""
             UPDATE bank
             SET amount = ?
-            WHERE discord_id = ? and item_id = ? and item_type = ? 
+            WHERE discord_id = ? and item_id = ? and item_type = ?
             """, (deposit_amount, discord_id, item_id, item_type,))
 
 
@@ -194,23 +200,23 @@ async def withdraw_item_from_bank(ctx, item, item_type, amount):
         item_id = item
     else:
         if item_type == 'resource':
-            data = await sql_query(""" 
-                SELECT id 
-                FROM resource_items 
+            data = await sql_query("""
+                SELECT id
+                FROM resource_items
                 WHERE item_name = ?
                 """, (item,))
             item_id = data[0][0]
         elif item_type == 'equipable':
-            data = await sql_query(""" 
-                SELECT id 
-                FROM equipable_items 
+            data = await sql_query("""
+                SELECT id
+                FROM equipable_items
                 WHERE item_name = ?
                 """, (item,))
             item_id = data[0][0]
     # get current amount in bank for this item, type and user
-    amount_in_bank = await sql_query("""   
-        SELECT amount 
-        FROM bank 
+    amount_in_bank = await sql_query("""
+        SELECT amount
+        FROM bank
         WHERE discord_id = ? and item_id = ? and item_type = ?
         """, (discord_id, item_id, item_type,))
     # check if requested item is in the bank
@@ -224,7 +230,7 @@ async def withdraw_item_from_bank(ctx, item, item_type, amount):
             await sql_edit("""
                 DELETE
                 FROM bank
-                WHERE discord_id = ? and item_id = ? and item_type = ? 
+                WHERE discord_id = ? and item_id = ? and item_type = ?
                 """, (discord_id, item_id, item_type,))
             return amount_in_bank
         else:
@@ -232,7 +238,7 @@ async def withdraw_item_from_bank(ctx, item, item_type, amount):
             await sql_edit("""
                 UPDATE bank
                 SET amount = ?
-                WHERE discord_id = ? and item_id = ? and item_type = ? 
+                WHERE discord_id = ? and item_id = ? and item_type = ?
                 """, (amount_in_bank, discord_id, item_id, item_type,))
             return amount
 
@@ -245,23 +251,23 @@ async def check_amount_in_bank(ctx, item, item_type):
         item_id = item
     else:
         if item_type == 'resource':
-            data = await sql_query(""" 
-                SELECT id 
-                FROM resource_items 
+            data = await sql_query("""
+                SELECT id
+                FROM resource_items
                 WHERE item_name = ?
                 """, (item,))
             item_id = data[0][0]
         elif item_type == 'equipable':
-            data = await sql_query(""" 
-                SELECT id 
-                FROM equipable_items 
+            data = await sql_query("""
+                SELECT id
+                FROM equipable_items
                 WHERE item_name = ?
                 """, (item,))
             item_id = data[0][0]
     # get current amount in bank for this item, type and user
-    amount_in_bank = await sql_query("""   
-        SELECT amount 
-        FROM bank 
+    amount_in_bank = await sql_query("""
+        SELECT amount
+        FROM bank
         WHERE discord_id = ? and item_id = ? and item_type = ?
         """, (discord_id, item_id, item_type,))
     return amount_in_bank
@@ -292,3 +298,8 @@ async def add_kill_count(ctx, boss_id, amount_of_kills):
 
 
 # TODO: create a gathering skills tracker table, function
+"""
+
+
+
+"""

@@ -53,20 +53,21 @@ class FiremakingTraining(Cog, name="Firemaking Training"):
             # TODO: Add Emoji ID thingy
             # log_emoji = int((await sql_query("SELECT emoji_id FROM resource_items WHERE item_name = ?",
             #                                 (log_backend_name,)))[0][0])
-        print(firemaking_lvl, " cur_lvl vs ",
-              required_firemaking_lvl, " lvl needed to light ", log_backend_name)
         if required_firemaking_lvl <= firemaking_lvl:
-            time_check = check_time(requested_time,
-                                    1, 8)
-            if time_check[0] is True:
+            time_check = check_time(requested_time)
+            print("time_check returns", time_check)
+            if not time_check[1] == None:
+                await ctx.send(embed=time_check[1])
+            if not time_check[0] == 0:
                 display_log = "normal" if log == "log" else log
                 embed = discord.Embed(
                     description=f"{character_name} begins lighting {display_log} logs "
-                                f"for {requested_time} hour(s).")
+                                f"for {time_check[0]} minutes.")
                 embed.set_footer(text=ctx.author.name)
                 await ctx.send(embed=embed)
                 time_started = time.time()
-                time_end = time.time() + (requested_time * 60)  # TODO: This is the timer
+                # TODO: This is the timer
+                time_end = time.time() + time_check[0]
                 fires_lighted = 0
                 session_fires_lighted = 0
                 minutes_passed = 0
@@ -84,11 +85,15 @@ class FiremakingTraining(Cog, name="Firemaking Training"):
                 activity_embed = await ctx.send(embed=activity_embed)
                 first_run = True
                 while time_started < time_end:
+                    print(time_end - time.time(),
+                          "diff time_end - time", minutes_passed)
+                    # TODO: The timers is faster than 1 second pr. tick??
                     if time.time() >= time_end:
+
                         firemaking_exp_gained_total = session_fires_lighted * xp_per_fire
                         embed = discord.Embed(title=f"{character_name} finished lighting {display_log} logs on fire "
                                                     f" EMOJI ID LOG "
-                                                    f"for {requested_time} hour(s)",
+                                                    f"for {requested_time} minutes(s)",
                                               description=f"You cut {session_fires_lighted} {display_log} logs "
                                                     f" EMOJI ID LOG earning "
                                                     f"you a total of {firemaking_exp_gained_total} "
@@ -113,12 +118,6 @@ class FiremakingTraining(Cog, name="Firemaking Training"):
                         first_run = False
                         minutes_passed = 0
                     total_firemaking_exp = session_fires_lighted * xp_per_fire
-                    embed = discord.Embed(description=f"You light {fires_per_minute} more {display_log} fires "
-                                          f"({session_fires_lighted} total) "
-                                          f"for {total_firemaking_exp} firemaking experience ")
-                    embed.set_footer(
-                        text=f"{ctx.author.name} - Runtime: {total_minutes_passed} minute(s).")
-                    await activity_embed.edit(embed=embed)
                     minutes_passed += 1
                     total_minutes_passed += 1
                     # Check if user has enough logs for the next minute.
@@ -128,6 +127,12 @@ class FiremakingTraining(Cog, name="Firemaking Training"):
                         return await ctx.send(embed=activity_embed)
                     fires_lighted += fires_per_minute
                     session_fires_lighted += fires_per_minute
+                    embed = discord.Embed(description=f"You light {fires_per_minute} more {display_log} fires "
+                                          f"({session_fires_lighted} total) "
+                                          f"for {total_firemaking_exp} firemaking experience ")
+                    embed.set_footer(
+                        text=f"{ctx.author.name} - Runtime: {total_minutes_passed} minute(s).")
+                    await activity_embed.edit(embed=embed)
 
 
 def setup(bot):
