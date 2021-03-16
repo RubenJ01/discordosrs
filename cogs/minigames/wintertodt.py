@@ -126,8 +126,26 @@ class WinterTodt(Cog, name="Wintertodt"):
         await asyncio.sleep(wait_time)
 
     @has_character()
-    @has_level("firemaking", 50)
     @commands.group(name="wintertodt")
+    async def wintertodt(self, ctx):
+        desc = f"The Wintertodt is a minigame-style boss that is fought using skills rather than combat. " \
+               f"It is located in the Northern Tundras in Great Kourend, bringing a storm of perpetual winter " \
+               f"and unfathomable cold. According to the look-out, it is unclear what the Wintertodt actually is, " \
+               f"but its ability to alter the weather to extremely low temperatures has earned it notoriety among " \
+               f"the people of Great Kourend.\n\n" \
+               f"**Usage:**\n" \
+               f";wintertodt - *This message.*\n" \
+               f";wintertodt start [time] - *Fight the wintertodt for a specific amount of time.*\n" \
+               f";wintertodt stats - *View your wintertodt stats.*\n" \
+               f";wintertodt stop - *Stop fighting the wintertodt.*\n\n" \
+               f"**Requirements:**\n" \
+               f"50 firemaking {self.bot.get_emoji(815955047417380874)}"
+        embed = discord.Embed(title=f"Wintertodt {self.bot.get_emoji(815955047417380874)}", description=desc)
+        return await ctx.send(embed=embed)
+
+    @has_character()
+    @has_level("firemaking", 50)
+    @wintertodt.command(name="start")
     async def wintertodt_game_loop(self, ctx, requested_time: int):
         values = check_time(requested_time, 1, 8)
         character_name = (await sql_query("SELECT name FROM characters WHERE discord_id = ?", (ctx.author.id,)))[0][0]
