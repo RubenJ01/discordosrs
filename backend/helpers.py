@@ -1,6 +1,7 @@
 import json
 import os
 import discord
+import re
 from pathlib import Path
 
 from backend.conn import cur, conn, db
@@ -116,6 +117,15 @@ async def gained_exp(ctx, skill, amount):
 def check_time(requested_time, minimum_time, maximum_time):
     # TODO: Do some regex to check if there's an m or an h
     # If none of those, assume its an hour
+    hour = re.compile('h')
+    minutes = re.compile('m')
+
+    if hour.search(requested_time).group() == 'h':
+        print('user wants an hour')
+    elif minutes.search(requested_time).group() == 'm':
+        print('user wants a minute')
+    else:
+        print('user dont care, so we give them hour')
 
     if requested_time > maximum_time:
         embed = discord.Embed(
@@ -282,4 +292,3 @@ async def add_kill_count(ctx, boss_id, amount_of_kills):
 
 
 # TODO: create a gathering skills tracker table, function
-
