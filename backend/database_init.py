@@ -139,7 +139,6 @@ cur.execute(
     CREATE TABLE IF NOT EXISTS enemy_kills (
     discord_id bigint(20) NOT NULL,
     boss_id int,
-    boss_name varchar(40),
     time_of_first_kill datetime DEFAULT CURRENT_TIMESTAMP,
     kill_count bigint,
     PRIMARY KEY (discord_id, boss_id),

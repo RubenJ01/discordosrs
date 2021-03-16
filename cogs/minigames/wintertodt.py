@@ -3,7 +3,7 @@ import asyncio
 import time
 import math
 
-from backend.helpers import gained_exp, check_time, sql_query
+from backend.helpers import gained_exp, check_time, sql_query, add_kill_count
 from backend.checks import has_character, has_level
 
 import discord
@@ -114,6 +114,7 @@ class WinterTodt(Cog, name="Wintertodt"):
         embed.set_image(url="https://oldschool.runescape.wiki/images/thumb/1/15/Howling_Snow_Storm.gif/300px"
                             "-Howling_Snow_Storm.gif?ec549")
         embed.set_footer(text=ctx.author.name)
+        await add_kill_count(ctx, 1, 1)
         await activity_embed.edit(embed=embed)
 
     async def game_pause(self, ctx):
