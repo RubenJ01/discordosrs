@@ -67,7 +67,7 @@ class FiremakingTraining(Cog, name="Firemaking Training"):
                 await ctx.send(embed=embed)
                 time_started = time.time()
                 # TODO: This is the timer
-                time_end = time.time() + time_check[0]
+                time_end = time.time() + time_check[0] * 60
                 fires_lighted = 0
                 session_fires_lighted = 0
                 minutes_passed = 0
@@ -84,9 +84,13 @@ class FiremakingTraining(Cog, name="Firemaking Training"):
                 activity_embed.set_footer(text=ctx.author.name)
                 activity_embed = await ctx.send(embed=activity_embed)
                 first_run = True
+                #time_left = time_check[0] * 60
+                ticker_size = 60
                 while time_started < time_end:
+                    time_start_current_itteration = time.time()
+
                     print(time_end - time.time(),
-                          "diff time_end - time", minutes_passed)
+                          "diff time_end - time, minutes passed", minutes_passed)
                     # TODO: The timers is faster than 1 second pr. tick??
                     if time.time() >= time_end:
 
@@ -103,7 +107,7 @@ class FiremakingTraining(Cog, name="Firemaking Training"):
                         return await ctx.send(embed=embed)
                         # TODO: Add the embed to tell user he's finished and how much he's done.
                     logs_needed = fires_per_minute * session_time
-                    await asyncio.sleep(1)  # TODO: This is the ticker time
+                    # TODO: This is the ticker time
                     # check if 1 session has has passed.
                     # TODO: Also make sure you use all the wood? (i mean it should, since it uses 1 fires_per_minute pr. minute)
 
@@ -133,6 +137,13 @@ class FiremakingTraining(Cog, name="Firemaking Training"):
                     embed.set_footer(
                         text=f"{ctx.author.name} - Runtime: {total_minutes_passed} minute(s).")
                     await activity_embed.edit(embed=embed)
+
+                    # Ticker time
+                    current_tick = ticker_size - \
+                        (time.time() - time_start_current_itteration)
+
+                    await asyncio.sleep(current_tick)
+                    #time_left -= ticker_size
 
 
 def setup(bot):
