@@ -89,10 +89,6 @@ class FiremakingTraining(Cog, name="Firemaking Training"):
 
                 while time_started < time_end:
                     time_start_current_itteration = time.time()
-
-                    print(time_end - time.time(),
-                          "diff time_end - time, minutes passed", minutes_passed)
-                    # TODO: The timers is faster than 1 second pr. tick??
                     if time.time() >= time_end:
 
                         firemaking_exp_gained_total = session_fires_lighted * xp_per_fire
@@ -108,7 +104,6 @@ class FiremakingTraining(Cog, name="Firemaking Training"):
                         return await ctx.send(embed=embed)
                         # TODO: Add the embed to tell user he's finished and how much he's done.
                     logs_needed = fires_per_minute * session_time
-                    # TODO: This is the ticker time
                     # check if 1 session has has passed.
                     # TODO: Also make sure you use all the wood? (i mean it should, since it uses 1 fires_per_minute pr. minute)
 
