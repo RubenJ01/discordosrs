@@ -67,7 +67,8 @@ class FiremakingTraining(Cog, name="Firemaking Training"):
                 await ctx.send(embed=embed)
                 time_started = time.time()
                 # TODO: This is the timer
-                time_end = time.time() + time_check[0] * 60
+                ticker_size = 60
+                time_end = time.time() + time_check[0] * ticker_size
                 fires_lighted = 0
                 session_fires_lighted = 0
                 minutes_passed = 0
@@ -85,7 +86,7 @@ class FiremakingTraining(Cog, name="Firemaking Training"):
                 activity_embed = await ctx.send(embed=activity_embed)
                 first_run = True
                 #time_left = time_check[0] * 60
-                ticker_size = 60
+
                 while time_started < time_end:
                     time_start_current_itteration = time.time()
 

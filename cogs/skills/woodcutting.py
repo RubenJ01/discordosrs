@@ -53,7 +53,7 @@ class WoodcuttingTraining(Cog, name="Woodcutting Training"):
 
     @has_character()
     @woodcutting.command(name="cut")
-    async def cut(self, ctx, log: str, requested_time: int):
+    async def cut(self, ctx, log: str, requested_time):
         character_name = (await sql_query("SELECT name FROM characters WHERE discord_id = ?", (ctx.author.id,)))[0][0]
         path_ = Path(os.getcwd(), "resources", "trees.json")
         with open(path_, "r") as f:
@@ -89,12 +89,13 @@ class WoodcuttingTraining(Cog, name="Woodcutting Training"):
                     await ctx.send(embed=embed)
                     time_started = time.time()
                     # TODO: This is the timer
-                    time_end = time.time() + time_check[0] * 60
+                    ticker_size = 60
+                    time_end = time.time() + time_check[0] * ticker_size
                     # Predifne itteration variables
                     session_logs_cut = 0
                     minutes_passed = 0
                     total_minutes_passed = 0
-                    ticker_size = 60
+
                     xp_per_log = data["trees"][index]["xp_per_log"]
                     xp_per_hour_at_99 = data["trees"][index]["xp_per_hour_at_99"]
                     activity_embed = discord.Embed(
