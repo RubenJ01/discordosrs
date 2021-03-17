@@ -118,7 +118,6 @@ def check_time(requested_time):
     minimum_time = 15
     maximum_time = 8*60
 
-    # TODO: REMAKE INTO MINUTES
     # If none of those, assume its an hour
     print(requested_time)
     minutes = re.compile('m')
