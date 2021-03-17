@@ -89,7 +89,7 @@ class WoodcuttingTraining(Cog, name="Woodcutting Training"):
                     await ctx.send(embed=embed)
                     time_started = time.time()
                     # TODO: This is the timer
-                    time_end = time.time() + (time_check[0])
+                    time_end = time.time() + time_check[0] * 60
                     # Predifne itteration variables
                     session_logs_cut = 0
                     minutes_passed = 0
@@ -143,7 +143,7 @@ class WoodcuttingTraining(Cog, name="Woodcutting Training"):
                             minutes_passed = 0
                         current_tick = ticker_size - \
                             (time.time() - time_start_current_itteration)
-                        # TODO: This is the ticker time
+                        # ticker time
                         await asyncio.sleep(current_tick)
                 else:
                     return await ctx.send(embed=time_check[1])

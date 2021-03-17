@@ -137,11 +137,9 @@ class FiremakingTraining(Cog, name="Firemaking Training"):
                     embed.set_footer(
                         text=f"{ctx.author.name} - Runtime: {total_minutes_passed} minute(s).")
                     await activity_embed.edit(embed=embed)
-
                     # Ticker time
                     current_tick = ticker_size - \
                         (time.time() - time_start_current_itteration)
-
                     await asyncio.sleep(current_tick)
                     #time_left -= ticker_size
 
