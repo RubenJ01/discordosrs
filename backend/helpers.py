@@ -117,21 +117,19 @@ async def gained_exp(ctx, skill, amount):
 def check_time(requested_time):
     minimum_time = 15
     maximum_time = 8*60
-
     # If none of those, assume its an hour
     print(requested_time)
     minutes = re.compile('m')
     time = 0
     digits = re.compile(r'\d*')
-    if not digits.search(requested_time) == None:
+    if not digits.search(requested_time) is None:
         time = int(digits.search(requested_time).group())
     else:
         embed = discord.Embed(
             description=f"Input {requested_time} contains no digits")
         return [0, embed]
-    if minutes.search(requested_time) == None:
+    if minutes.search(requested_time) is None:
         time = time * 60
-
     if time > maximum_time:
         embed = discord.Embed(
             description=f"The maximum time is {maximum_time} hours.")

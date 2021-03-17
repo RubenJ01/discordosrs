@@ -7,7 +7,8 @@ from backend.helpers import gained_exp, check_time, sql_query, add_kill_count
 from backend.checks import has_character, has_level
 
 import discord
-from discord.ext.commands import Cog, command
+from discord.ext.commands import Cog, command, cooldown
+from discord.ext.commands.cooldowns import BucketType
 from discord.ext import commands
 
 
@@ -126,8 +127,9 @@ class WinterTodt(Cog, name="Wintertodt"):
         embed.set_footer(text=ctx.author.name)
         await asyncio.sleep(wait_time)
 
+    @cooldown(1, 5, BucketType.user)
     @has_character()
-    @commands.group(name="wintertodt")
+    @commands.group(name="wintertodt", invoke_without_command=True)
     async def wintertodt(self, ctx):
         desc = f"The Wintertodt is a minigame-style boss that is fought using skills rather than combat. " \
                f"It is located in the Northern Tundras in Great Kourend, bringing a storm of perpetual winter " \
@@ -144,18 +146,19 @@ class WinterTodt(Cog, name="Wintertodt"):
         embed = discord.Embed(title=f"Wintertodt {self.bot.get_emoji(815955047417380874)}", description=desc)
         return await ctx.send(embed=embed)
 
+    @cooldown(1, 5, BucketType.user)
     @has_character()
     @has_level("firemaking", 50)
     @wintertodt.command(name="start")
-    async def wintertodt_game_loop(self, ctx, requested_time: int):
-        values = check_time(requested_time, 1, 8)
+    async def wintertodt_game_loop(self, ctx, requested_time: str):
+        values = check_time(requested_time)
         character_name = (await sql_query("SELECT name FROM characters WHERE discord_id = ?", (ctx.author.id,)))[0][0]
-        if values[0] is True:
+        if values[0] != 0:
             embed = discord.Embed(description=f"{character_name} begins subdueing the Wintertodt for "
-                                              f"{requested_time} hour(s).")
+                                              f"{values[0]} minute(s).")
             embed.set_footer(text=ctx.author.name)
             time_started = time.time()
-            time_end = time.time() + (requested_time * 3600)
+            time_end = time.time() + (values[0] * 60)
             await ctx.send(embed=embed)
             while time_started < time_end:
                 await self.start_game(ctx)
@@ -164,11 +167,17 @@ class WinterTodt(Cog, name="Wintertodt"):
                 else:
                     break
             embed = discord.Embed(description=f"{character_name} finished doing the Wintertodt for "
-                                              f"{requested_time} hour(s).")
+                                              f"{values[0]} minute(s).")
             embed.set_footer(text=ctx.author.name)
             return await ctx.send(embed=embed)
         else:
             return await ctx.send(embed=values[1])
+
+    @cooldown(1, 5, BucketType.user)
+    @has_character()
+    @wintertodt.command(name="stats")
+    async def stats(self, ctx):
+        query = "SELECT kill_count FROM enemy_kills"
 
 
 def setup(bot):
