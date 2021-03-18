@@ -137,6 +137,7 @@ class WoodcuttingTraining(Cog, name="Woodcutting Training"):
                         minutes_passed += 1
                         if minutes_passed >= 15:
                             xp_to_add = logs_in_inventory * xp_per_log
+                            # TODO: Calculate if you gained a pet exD
                             await gained_exp(ctx, 'woodcutting', xp_to_add)
                             log_type = display_log + '_log'
                             await deposit_item_to_bank(ctx, log_type, 'resource', logs_in_inventory)
@@ -159,6 +160,16 @@ class WoodcuttingTraining(Cog, name="Woodcutting Training"):
             return await ctx.send(embed=embed)
 
     # TODO: make a stop command for woodcutting
+    def calculate_pet_odds(logs_cut, log_type, player_lvl):
+
+        base_chance = 0
+        lottery_ticket = randint(1, 1000000)
+        change_to_get_beaver = 1 / (base_chance - (player_lvl * 25)) * 1000000
+
+        if change_to_get_beaver > lottery_ticket:
+            # they get the beaver!!
+            pass
+        pass
 
 
 def setup(bot):
