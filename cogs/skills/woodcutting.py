@@ -122,6 +122,12 @@ class WoodcuttingTraining(Cog, name="Woodcutting Training"):
                         effeciency_coefficient = randint(5, 10)/10
                         logs_per_minute = round((
                             xp_per_hour_at_99 / 60 / xp_per_log) * effeciency_coefficient)
+                        # see if user looted a pet
+                        # TODO: Calculate if you gained a pet exD
+                        base_chance = data["trees"][index]["beaver_loot_change"]
+                        # TODO: get the current woodcutting_lvl since player might've leveled up sinse last run.
+                        calculate_pet_odds(
+                            logs_in_inventory, base_chance, woodcutting_lvl)
                         # Iterate logs and exp
                         logs_in_inventory += logs_per_minute
                         session_logs_cut += logs_per_minute
@@ -137,11 +143,7 @@ class WoodcuttingTraining(Cog, name="Woodcutting Training"):
                         minutes_passed += 1
                         if minutes_passed >= 15:
                             xp_to_add = logs_in_inventory * xp_per_log
-                            # TODO: Calculate if you gained a pet exD
-                            base_chance = data["trees"][index]["beaver_loot_change"]
-                            # TODO: get the current woodcutting_lvl since player might've leveled up sinse last run.
-                            calculate_pet_odds(
-                                logs_in_inventory, base_chance, woodcutting_lvl)
+
                             await gained_exp(ctx, 'woodcutting', xp_to_add)
                             log_type = display_log + '_log'
                             await deposit_item_to_bank(ctx, log_type, 'resource', logs_in_inventory)
@@ -167,13 +169,13 @@ class WoodcuttingTraining(Cog, name="Woodcutting Training"):
 
 
 def calculate_pet_odds(logs_cut, base_chance, player_lvl):
+    chance_to_get_beaver = (1 / (base_chance - (player_lvl * 25))) * 1000000
 
-    base_chance = 0
-    lucky_number = randint(1, 1000000)
-
-    change_to_get_beaver = 1 / (base_chance - (player_lvl * 25)) * 1000000
     for logs in range(logs_cut):
-        if change_to_get_beaver > lucky_number:
+        lucky_number = randint(1, 1000000)
+        print("lucky number:", lucky_number, "chance_to_get_beaver",
+              chance_to_get_beaver, "base chance", base_chance)
+        if chance_to_get_beaver > lucky_number:
             # TODO: We need to do a message to the player here.
             print("YOU LOOTED THE BEAVER!!!")
             pass
