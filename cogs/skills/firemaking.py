@@ -50,9 +50,9 @@ class FiremakingTraining(Cog, name="Firemaking Training"):
             firemaking_lvl = firemaking_lvl[0][0]
             required_firemaking_lvl = data["fires"][index]["level_requirement"]
             log_backend_name = "normal_log" if data["fires"][
-                                                   index]["log_name"] == "normal_log" else f"{log}_log"
+                index]["log_name"] == "normal_log" else f"{log}_log"
             # TODO: Add Emoji ID thingy
-            # log_emoji = int((await sql_query("SELECT emoji_id FROM resource_items WHERE item_name = ?",
+            # log_emoji = int((await sql_query("SELECT emoji_id FROM resource_items WHERE item name = ?",
             #                                 (log_backend_name,)))[0][0])
             if required_firemaking_lvl <= firemaking_lvl:
                 time_check = check_time(requested_time)
@@ -77,7 +77,8 @@ class FiremakingTraining(Cog, name="Firemaking Training"):
                     session_time = 15
                     xp_per_fire = data["fires"][index]["xp_per_fire"]
                     xp_per_hour_at_99 = data["fires"][index]["xp_per_hour_at_99"]
-                    fires_per_minute = round(xp_per_hour_at_99 / 60 / xp_per_fire)
+                    fires_per_minute = round(
+                        xp_per_hour_at_99 / 60 / xp_per_fire)
                     activity_embed = discord.Embed(
                         description=f"Getting ready to lighgt {display_log} logs on fire.")
                     # TODO: add a picture activity_embed.set_image(url=data["trees"][index]["image"])
@@ -136,7 +137,7 @@ class FiremakingTraining(Cog, name="Firemaking Training"):
                         await activity_embed.edit(embed=embed)
                         # Ticker time
                         current_tick = ticker_size - \
-                                       (time.time() - time_start_current_itteration)
+                            (time.time() - time_start_current_itteration)
                         await asyncio.sleep(current_tick)
                         # time_left -= ticker_size
 

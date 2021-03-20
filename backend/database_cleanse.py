@@ -28,7 +28,9 @@ cur.execute(
 cur.execute(
     """DROP TABLE IF EXISTS ressource_items"""
 )
-
+cur.execute(
+    """DROP TABLE IF EXISTS pets"""
+)
 cur.execute(
     """DROP TABLE IF EXISTS enemy_kills"""
 )

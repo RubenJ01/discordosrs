@@ -7,6 +7,7 @@ from pathlib import Path
 
 import discord
 from discord import message
+from discord import player
 from discord.ext.commands import Cog, command
 from discord.ext import commands
 
@@ -73,7 +74,7 @@ class WoodcuttingTraining(Cog, name="Woodcutting Training"):
             logs_in_inventory = 0
             log_backend_name = "normal_log" if data["trees"][
                 index]["log_name"] == "normal_log" else f"{log}_log"
-            log_emoji = int((await sql_query("SELECT emoji_id FROM resource_items WHERE item_name = ?",
+            log_emoji = int((await sql_query("SELECT emoji_id FROM resource_items WHERE name = ?",
                                              (log_backend_name,)))[0][0])
             if required_woodcutting_lvl <= woodcutting_lvl:
                 time_check = check_time(requested_time)
@@ -89,8 +90,8 @@ class WoodcuttingTraining(Cog, name="Woodcutting Training"):
                     await ctx.send(embed=embed)
                     time_started = time.time()
                     # TODO: This is the timer
-                    ticker_size = 60
-                    time_end = time.time() + time_check[0] * ticker_size
+                    ticker_size = 10
+
                     # Predifne itteration variables
                     session_logs_cut = 0
                     minutes_passed = 0
@@ -103,6 +104,9 @@ class WoodcuttingTraining(Cog, name="Woodcutting Training"):
                     activity_embed.set_image(url=data["trees"][index]["image"])
                     activity_embed.set_footer(text=ctx.author.name)
                     activity_embed = await ctx.send(embed=activity_embed)
+
+                    time_end = time.time() + time_check[0] * ticker_size
+                    await asyncio.sleep(ticker_size / 2)
                     while time_started < time_end:
                         time_start_current_itteration = time.time()
 
@@ -123,11 +127,10 @@ class WoodcuttingTraining(Cog, name="Woodcutting Training"):
                         logs_per_minute = round((
                             xp_per_hour_at_99 / 60 / xp_per_log) * effeciency_coefficient)
                         # see if user looted a pet
-                        # TODO: Calculate if you gained a pet exD
                         base_chance = data["trees"][index]["beaver_loot_change"]
                         # TODO: get the current woodcutting_lvl since player might've leveled up sinse last run.
-                        calculate_pet_odds(
-                            logs_in_inventory, base_chance, woodcutting_lvl)
+                        await calculate_pet_odds(
+                            ctx, logs_per_minute, base_chance, woodcutting_lvl)
                         # Iterate logs and exp
                         logs_in_inventory += logs_per_minute
                         session_logs_cut += logs_per_minute
@@ -149,10 +152,11 @@ class WoodcuttingTraining(Cog, name="Woodcutting Training"):
                             await deposit_item_to_bank(ctx, log_type, 'resource', logs_in_inventory)
                             logs_in_inventory = 0
                             minutes_passed = 0
+                        # wait for a minute
                         current_tick = ticker_size - \
                             (time.time() - time_start_current_itteration)
-                        # ticker time
                         await asyncio.sleep(current_tick)
+
                 else:
                     return await ctx.send(embed=time_check[1])
             else:
@@ -168,16 +172,15 @@ class WoodcuttingTraining(Cog, name="Woodcutting Training"):
     # TODO: make a stop command for woodcutting
 
 
-def calculate_pet_odds(logs_cut, base_chance, player_lvl):
+async def calculate_pet_odds(ctx, logs_cut, base_chance, player_lvl):
     chance_to_get_beaver = (1 / (base_chance - (player_lvl * 25))) * 1000000
 
     for logs in range(logs_cut):
-        lucky_number = randint(1, 1000000)
-        print("lucky number:", lucky_number, "chance_to_get_beaver",
-              chance_to_get_beaver, "base chance", base_chance)
+        lucky_number = randint(1, 3)
         if chance_to_get_beaver > lucky_number:
+            # TODO: Insert the beaver into the players bank? Or Do we need a pet table as well, and then include the pet in the bank functions?
+            await deposit_item_to_bank(ctx, 'beaver', 'pet', 1)
             # TODO: We need to do a message to the player here.
-            print("YOU LOOTED THE BEAVER!!!")
             pass
         else:
             # Do nothing

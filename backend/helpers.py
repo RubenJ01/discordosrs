@@ -1,4 +1,5 @@
 import json
+from math import e
 import os
 import discord
 import re
@@ -144,24 +145,23 @@ def check_time(requested_time):
 async def deposit_item_to_bank(ctx, item, item_type, amount):
     discord_id = ctx.author.id
     item_id = 0
-    # check if we got item_id or item_name in param
+    # check if we got item_id or item name in param
     if type(item) == 'int':
         item_id = item
     else:
-        if item_type == 'resource':
-            data = await sql_query("""
-                SELECT id
-                FROM resource_items
-                WHERE item_name = ?
-                """, (item,))
+        table = item_type + \
+            '_items' if item_type == 'resource' or item_type == 'equipable' else 'pets'
+        # TODO: Can you make this dynamic, so it just takes and f string and parses in {item_type} as the table name?
+        # you would of course have to add "_items" to the table name if it was equipable or resource, compared to the pet table.
+        try:
+            data = await sql_query(f"""
+            SELECT id
+            FROM {table}
+            WHERE name = ?
+            """, (item, ))
             item_id = data[0][0]
-        elif item_type == 'equipable':
-            data = await sql_query("""
-                SELECT id
-                FROM equipable_items
-                WHERE item_name = ?
-                """, (item,))
-            item_id = data[0][0]
+        except e:
+            print("got Error:", e)
     # get current amount in bank for this item, type and user
     amount_in_bank = await sql_query("""
         SELECT amount
@@ -192,24 +192,23 @@ async def withdraw_item_from_bank(ctx, item, item_type, amount):
     the function returns 0. """
     discord_id = ctx.author.id
     item_id = 0
-    # check if we got item_id or item_name in param
+    # check if we got item_id or item name in param
     if type(item) == 'int':
         item_id = item
     else:
-        if item_type == 'resource':
-            data = await sql_query("""
-                SELECT id
-                FROM resource_items
-                WHERE item_name = ?
-                """, (item,))
+        table = item_type + \
+            '_items' if item_type == 'resource' or item_type == 'equipable' else 'pets'
+        # TODO: Can you make this dynamic, so it just takes and f string and parses in {item_type} as the table name?
+        # you would of course have to add "_items" to the table name if it was equipable or resource, compared to the pet table.
+        try:
+            data = await sql_query(f"""
+            SELECT id
+            FROM {table}
+            WHERE name = ?
+            """, (item, ))
             item_id = data[0][0]
-        elif item_type == 'equipable':
-            data = await sql_query("""
-                SELECT id
-                FROM equipable_items
-                WHERE item_name = ?
-                """, (item,))
-            item_id = data[0][0]
+        except e:
+            print("got Error:", e)
     # get current amount in bank for this item, type and user
     amount_in_bank = await sql_query("""
         SELECT amount
@@ -243,24 +242,23 @@ async def withdraw_item_from_bank(ctx, item, item_type, amount):
 async def check_amount_in_bank(ctx, item, item_type):
     discord_id = ctx.author.id
     item_id = 0
-    # check if we got item_id or item_name in param
+    # check if we got item_id or item name in param
     if type(item) == 'int':
         item_id = item
     else:
-        if item_type == 'resource':
-            data = await sql_query("""
-                SELECT id
-                FROM resource_items
-                WHERE item_name = ?
-                """, (item,))
+        table = item_type + \
+            '_items' if item_type == 'resource' or item_type == 'equipable' else 'pets'
+        # TODO: Can you make this dynamic, so it just takes and f string and parses in {item_type} as the table name?
+        # you would of course have to add "_items" to the table name if it was equipable or resource, compared to the pet table.
+        try:
+            data = await sql_query(f"""
+            SELECT id
+            FROM {table}
+            WHERE name = ?
+            """, (item, ))
             item_id = data[0][0]
-        elif item_type == 'equipable':
-            data = await sql_query("""
-                SELECT id
-                FROM equipable_items
-                WHERE item_name = ?
-                """, (item,))
-            item_id = data[0][0]
+        except e:
+            print("got Error:", e)
     # get current amount in bank for this item, type and user
     amount_in_bank = await sql_query("""
         SELECT amount

@@ -63,13 +63,14 @@ cur.execute(
 cur.execute(
     """
     CREATE TABLE IF NOT EXISTS bank (
-    discord_id bigint(20) NOT NULL,
-    item_type enum ('resource', 'equipable') NOT NULL,
+    discord_id bigint NOT NULL,
+    item_type enum ('resource', 'equipable', 'pet') NOT NULL,
     item_id int NOT NULL,
     amount int,
     PRIMARY KEY (discord_id, item_id, item_type),
     FOREIGN KEY (discord_id) REFERENCES characters(discord_id) ON DELETE CASCADE
-    );
+)
+
     """
 )
 
@@ -93,17 +94,25 @@ cur.execute(
     """
 )
 
-"""Resource Items"""
+""" Items"""
 cur.execute(
     """
     CREATE TABLE IF NOT EXISTS resource_items (
     id int auto_increment primary key,
-    item_name varchar(40) NOT NULL,
+    name varchar(40) NOT NULL,
     emoji_id char(18)
     );
     """
 )
-
+cur.execute(
+    """
+    CREATE TABLE IF NOT EXISTS pets (
+    id int auto_increment primary key,
+    name varchar(40) NOT NULL,
+    emoji_id int
+    );
+    """
+)
 cur.execute(
     """
     CREATE TABLE IF NOT EXISTS enemies (

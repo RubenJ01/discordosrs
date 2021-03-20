@@ -1,11 +1,11 @@
 CREATE TABLE IF NOT EXISTS resource_items (
   id int auto_increment primary key,
-  item_name varchar(40) NOT NULL,
+  name varchar(40) NOT NULL,
   emoji_id int
 )
 
 INSERT INTO resource_items (
-    item_name,
+    name,
     emoji_id
     )
 VALUES

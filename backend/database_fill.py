@@ -1,10 +1,11 @@
 from conn import cur
 
+
 """Insert items into the resource items table"""
 cur.execute(
     """
-    INSERT INTO resource_items (
-    item_name,
+    INSERT INTO resource_items(
+    name,
     emoji_id
     )
     VALUES
@@ -51,26 +52,26 @@ cur.execute(
 cur.execute(
     """
     INSERT INTO enemies(
-    type, 
-    name, 
-    combat_lvl, 
-    hit_points, 
-    attack, 
-    strength, 
-    defence, 
-    magic, 
-    ranged, 
-    stab_attack, 
-    slash_attack, 
-    crush_attack, 
-    magic_attack, 
-    ranged_attack, 
-    stab_defence, 
-    slash_defence, 
+    type,
+    name,
+    combat_lvl,
+    hit_points,
+    attack,
+    strength,
+    defence,
+    magic,
+    ranged,
+    stab_attack,
+    slash_attack,
+    crush_attack,
+    magic_attack,
+    ranged_attack,
+    stab_defence,
+    slash_defence,
     crush_defence,
-    magic_defence, 
-    ranged_defence, 
-    immunte_to_poison, 
+    magic_defence,
+    ranged_defence,
+    immunte_to_poison,
     immunte_to_venom
     )
     VALUES
@@ -97,5 +98,20 @@ cur.execute(
         false,
         false
     );
+    """
+)
+
+"""Insert data into pets"""
+cur.execute(
+    """
+    INSERT INTO pets(
+    name,
+    emoji_id
+    )
+    VALUES
+    (
+        'beaver',
+        '0'
+    )
     """
 )
